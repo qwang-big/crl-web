@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<head>
+
+    <meta HTTP-EQUIV="X-UA-COMPATIBLE" CONTENT="IE=EmulateIE9" >
+    <script type="text/javascript" src="scripts/d3.min.js"></script>
+    <script type="text/javascript" src="scripts/queue.v1.min.js"></script>
+    <script type="text/javascript" src="scripts/d3.autocomplete.js"></script>
+
+<script language="JavaScript">
+
+    //Variable to hold autocomplete options
+    var curMap, scale=1, names = [], ids = [], data = [], dPC = [], genes = [];
+var code = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+	var cols = ["#BEBEBE","#C5C5C5","#CBCBCB","#D2D2D2","#D8D8D8","#DFDFDF","#E5E5E5",
+"#ECECEC","#F2F2F2","#F9F9F9","#FFFFFF","#FFE6E6","#FFCCCC","#FFB3B3",
+"#FF9999","#FF8080","#FF6666","#FF4D4D","#FF3333","#FF1A1A","#FF0000"]
+	var col2 = ["#0000FF","#1A1AFF","#3333FF","#4D4DFF","#6666FF","#8080FF","#9999FF",
+"#B3B3FF","#CCCCFF","#E6E6FF","#FFFFFF","#FFE6E6","#FFCCCC","#FFB3B3",
+"#FF9999","#FF8080","#FF6666","#FF4D4D","#FF3333","#FF1A1A","#FF0000"]
+	function rep(c, n) {
+		ret = ''
+		for(i=0; i<n; i++)
+			ret += c
+		return ret
+	}
+	function explode(str) {
+		ret = ''
+		for(i=0; i<str.length; i++) {
+			c = str.charAt(i)
+			ret += (c>'9') ? c : rep(c1, c-1)
+			c1 = c
+		}
+		return ret
+	}
+	function strsplit(x, s, part) {
+    if (x.indexOf(s)<0)
+      return x
+    else if (part==1)
+      return x.substr(0,x.indexOf(s))
+    else if (part==2)
+      return x.substr(x.indexOf(s)+1,x.length)
+    else
+      return x
+  }
+
+    function drawMain(error, name, seq) {
+			for (var i in name) {
+			    names.push(name[i].x)
+			}
+			for (var i in seq) {
+					id = parseInt(seq[i].id)
+			    dPC[id] = parseFloat(seq[i].dpc)
+			    data[id] = seq[i].data
+			    ids[id] = seq[i].name
+					if (seq[i].name.indexOf('_')>0) {
+						geneName = seq[i].name.substr(0,seq[i].name.indexOf('_'))
+						genes.push({name:geneName, id:id})
+					}
+			}
+        setAutocomplete();
+    }
+
+	function getMaxIdLessThan(d, v) {
+		j = 1
+		for(i in v) {
+			if (v[i]<d) j=v[i]
+			else return j
+		}
+		return j
+	}
+	function getReadableIndex(d, w) {
+		d = d-getMaxIdLessThan(d,chrId)
+		return (d*w/1000000).toFixed(2)
+	}
+	function zoomIn(d) {
+		scale=Math.min(20, scale*2)
+		heatmapImpl()
+		return false
+	}
+	function zoomOut(d) {
+		scale=Math.max( 1, scale/2)
+		heatmapImpl()
+		return false
+	}
+
+	function heatmap(d) {
+	  curMap = d
+	  curMap.s = Math.max(0,d.id-200)
+	  curMap.e = d.id+200
+	  heatmapImpl()
+	}
+
+	function legend(cols, id) {
+		var panel = d3.select(id)
+	  	panel.selectAll("*").remove()
+		panel.append('span').text('low')
+		var svg = panel.append('svg').attr("width", 5*cols.length).attr("height", 20)
+		for(i in cols)
+		svg.append('rect')
+		.attr('x',5*i)
+		.attr('y',0)
+		.attr('width',5)
+		.attr('height',20)
+		.attr('fill', cols[i] )
+		panel.append('span').text('high')
+	}
+  
+	function heatmapImpl() {
+	  var d = curMap
+	  var root = d3.select("#heatmap")
+    var tooltip = d3.select("#tooltip")
+    color = d3.scale.linear().domain([d3.min(dPC),0,d3.max(dPC)]).range(["#00f", "#fff", "#f00"]).nice()
+	  legend(cols, "#legend")
+	  //legend(col2, "#legend2")
+	  root.selectAll("*").remove();
+	  var h=20, y=0, x=0, W=1500, H=h*names.length
+	  var s = parseInt(d.s)
+	  var e = parseInt(d.e)
+	  var p = e - s
+	  s += parseInt((p - p/scale)/2)
+	  e -= parseInt((p - p/scale)/2)
+	  p  = p/scale
+	  var w = Math.max(W/p, 1)
+	  var plot = root.append('svg').attr("width", W+150).attr("height", H+h)
+	  for(var i=s; i<e; i++) {
+      y = 0
+			if (i in data){
+	      plot.append('a')
+		    .attr('xlink:href',"http://www.genecards.org/Search/Keyword?queryString="+strsplit(ids[i],'_',1))
+		    .attr('target',"_blank")
+        .append('rect')
+        .datum(i)
+	      .attr('x',x)
+	      .attr('y',y)
+	      .attr('width',w)
+	      .attr('height',h)
+	      .attr('fill', i in dPC ? color(dPC[i]) : '#fff' )
+			  .style('stroke-width', 0.1)
+			  .style('stroke', '#000')
+	      .on("mouseover", function(j){
+            tooltip.html(ids[j]+": "+(dPC[j]!== undefined?dPC[j].toFixed(2):"undefined"))
+	          return tooltip.style("visibility", "visible");
+        })
+	      .on("mousemove", function(){
+	           return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px")
+	      })
+	      .on("mouseout", function(){
+	           return tooltip.style("visibility", "hidden")
+	      })
+				y += h
+	      for(var j=0; j<data[i].length; j++) {
+		      plot.append('rect')
+		      .attr('x',x)
+		      .attr('y',y)
+		      .attr('width',w)
+		      .attr('height',h)
+		      .attr('fill', cols[code.indexOf(data[i].charAt(j))])
+				  y += h
+		    }
+      }else{
+	      plot.append('rect')
+	      .attr('x',x)
+	      .attr('y',h)
+	      .attr('width',w)
+	      .attr('height',H)
+	      .attr('fill', '#eee')
+      }
+      x += w
+		}
+    y = h
+    var group = strsplit(names[0],'-',1)
+    var dataset = strsplit(names[0],'-',2)
+    for(var j=0; j<names.length; j++) {
+		  plot.append('a')
+		  .attr('xlink:href',"http://epigenomegateway.wustl.edu/browser/?genome=hg19&datahub=https://raw.githubusercontent.com/qwang-big/crl-data/master/json/CRC.json")
+		  .attr('target',"_blank")
+		  .append('text').attr('x',x+w)
+		  .attr('y',11+y)
+		  .text(names[j])
+		  .style("font-size", "16px")
+      if (group !== strsplit(names[j],'-',1)){
+        plot.append('line')
+	      .attr('x1',0)
+	      .attr('y1',y)
+	      .attr('x2',W)
+	      .attr('y2',y)
+			  .style('stroke-width', 0.1)
+			  .style('stroke', '#000')
+      }
+      group = strsplit(names[j],'-',1)
+      if (dataset !== strsplit(names[j],'-',2)){
+        plot.append('line')
+	      .attr('x1',0)
+	      .attr('y1',y)
+	      .attr('x2',W)
+	      .attr('y2',y)
+			  .style('stroke-width', 0.3)
+			  .style('stroke', '#000')
+      }
+      dataset = strsplit(names[j],'-',2)
+			y += h
+    }
+  }
+    //Call back for when user selects an option
+    function onSelect(d) {
+        heatmap(d)
+    }
+
+    //Setup and render the autocomplete
+    function setAutocomplete() {
+        var mc = autocomplete(document.getElementById('test'))
+                .keys(genes)
+                .dataField("name")
+                .placeHolder("Type gene name here")
+                .width(960)
+                .height(500)
+                .onSelected(onSelect)
+                .render();
+    }
+
+	queue()
+	.defer(d3.csv, 'CRCname.csv')
+	.defer(d3.csv, "CRCseq.csv")
+	.await(drawMain);
+</script>
+    <link rel="stylesheet" href="fonts/bariol/bariol.css"/>
+    <link rel="stylesheet" href="styles/style.css"/>
+
+</head>
+
+<body>
+
+<a href="javascript:void(0)" onclick="return zoomIn()">+&nbsp;</a>
+<a href="javascript:void(0)" onclick="return zoomOut()">&#8211;</a>
+<span id="legend"></span>
+<span id="legend2"></span>
+<div id="test" style="width:100%; height:100%;"></div>
+<div id="tooltip" style="position:absolute; z-index:10; visibility:hidden; font-size:16px"></div>
+<div id="heatmap" style="width:100%; height:100%;"></div>
+
+</body>
+
+</html>
+

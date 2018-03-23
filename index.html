@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>HotNet2 Subnetworks</title>
+<style>
+	body{
+		font-family:"Helvetica","Arial";
+		padding:10px;
+	}
+	div.container{
+		width:1000px;
+		margin:0px auto;
+		background:"#F6F6F6";
+	}
+	div#instructions{
+		width:450px;
+		float:left;
+	}
+	div#filters{
+		width:450px;
+		float:right;
+	}
+	abbr{
+		font-weight:bold;
+		color:rgb(36,64,144);
+		border:1px solid rgb(36,64,144);
+		cursor:help;
+		font-size:80%;
+		padding:0px 2px 0px 2px;
+		float:right;
+		margin-left:30px;
+	}
+	div#figures{
+		padding:5px;
+		clear:both;
+	}
+	div#figures h3 small#stats{
+		float:right;
+		font-size:80%;
+	}
+	hr{
+		clear:both;
+		padding-bottom:0px;
+		margin:0px;
+		border:0;
+		border-bottom:1px solid #eee;
+	}
+	div#figures hr{
+		clear:both;
+		margin-top:30px;
+		border:0;
+		border-bottom:1px dashed #777777;
+	}
+	div#figures div.network{
+		width:800px;
+		float:left;
+	}
+	div#figures div.m2{
+		width:190px;
+		float:right;
+	}
+</style>
+<body>
+<div class="container">
+	<h1>Top 5 densely connected subnetworks by gene ranking</h1>
+	<hr/>
+
+	<div id="figures">
+		<h3>
+			Subnetworks
+                        <small id="params"></small>
+                        <small id="download">
+                          <a title="Download subnetworks."></a>
+                        </small>
+			<small id="stats">
+				<span id="observed"></span>
+				<span id="expected"></span>
+				<span id="pval"></span>
+			</small>
+		</h3>
+                <br/>
+	</div>
+</div>
+<!--script src="assets/jssor.slider-21.1.5.min.js"></script-->
+<script src="d3.min.js"></script>
+<script src="queue.v1.min.js"></script>
+<!--link rel="stylesheet" type="text/css" href="assets/jquery.dataTables.min.css"-->
+<!--script src="assets/jquery.min.js"></script-->
+<!--script src="assets/jquery.dataTables.min.js"></script-->
+<script>
+var heatFormat = d3.format(".3r");
+
+var tooltip = d3.select("body")
+	.append("div")
+	.style("position", "absolute")
+	.style("z-index", "10")
+	.style("visibility", "hidden")
+	.style("font-size", "16px");
+
+// Create an object that contains any changes to the default styles 
+var styling = {
+	fontColor: '#34495E',
+	heatLegendWidth: 300,
+	netLegendWidth: 90,
+	width: 800,
+	height: 800,
+	nodeRadius: 10,
+	strokeWidth: 4,
+	cold: 'rgb(102, 178, 255)',
+	hot: 'rgb(255, 51, 51)'
+}
+
+var dColor = d3.scale.linear()
+	  .domain([-1, 0, 1])
+	  .range(["#0c0", "#000", "#f30"])
+	  .nice();
+
+var col2 = ["#0000FF","#1A1AFF","#3333FF","#4D4DFF","#6666FF","#8080FF","#9999FF",
+"#B3B3FF","#CCCCFF","#E6E6FF","#FFFFFF","#FFE6E6","#FFCCCC","#FFB3B3",
+"#FF9999","#FF8080","#FF6666","#FF4D4D","#FF3333","#FF1A1A","#FF0000"]
+
+var dPCs=[], eigenVec=[], settings = {low:0, high:0, nrank:17888}
+
+function firstd(d) {
+  for(var i=0; i<d.length; i++){
+    if (d.charAt(i)=='0'||d.charAt(i)=='.') continue;
+    return (i>d.indexOf(".")?i:d.indexOf("."))+2
+  }
+}
+
+function shortp(d) {
+  return d.indexOf(".")>0 ? d.slice(0,firstd(d)) : d
+}
+
+function shorte(d) {
+  return d.indexOf("e")>0 ? d.slice(d.indexOf("e")) : ""
+}
+
+function shortd(d) {
+  return shortp(""+d) + shorte(""+d)
+}
+
+function ashortd(d) {
+  d = shortd(d)
+  return d.charAt(0)=="-" ? d.slice(1) : d
+}
+
+function legend(panel) {
+	panel.append('span').text(shortd(settings.low))
+	var svg = panel.append('svg').attr("width", 5*col2.length).attr("height", 20)
+	for(i in col2)
+	svg.append('rect')
+	.attr('x',5*i)
+	.attr('y',0)
+	.attr('width',5)
+	.attr('height',20)
+	.attr('fill', col2[i] )
+	panel.append('span').text(shortd(settings.high))
+}
+
+function tdfill(d, i) {
+	var colord = d3.scale.linear()
+	  .domain([settings.low, 0, settings.high])
+	  .range(["#00f", "#fff", "#f00"])
+	  .nice();
+	var str = '<td><a href="http://www.genecards.org/Search/Keyword?queryString='+d.id+'" target="_blank">'+d.id+'</a></td><td>'+d.dist+'</td>'
+	for(var j=1; j<=settings.pc; j++)
+		str += '<td style="background:'+colord(parseFloat(d["PC"+j]))+'">&nbsp;</td>'
+	return str
+}
+
+function trimstr(str, l) {
+	return str.substr(0,str.length-l)
+}
+
+function vpclabels() {
+	var foo = [];
+	for (var i = 1; i <= settings.pc; i++) {
+	   foo.push('PC'+i);
+	}
+	return foo
+}
+
+function cloned(obj, name, d) {
+	var target = {};
+	for (var i in obj) {
+		if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
+		target[i] = obj[i]
+	}
+	target[name] = d
+	return target
+}
+
+function range(d, i, n) {
+	var a = []
+	for(j=Math.max(d-i,0); j<Math.min(d+i, n); j++)
+		a.push(j)
+	return a;
+}
+
+function showtooltip(d) {
+	tooltip.html('PromEnh: '+(settings.nrank-d.rank)+'<br>PromOnly: '+(settings.nrank-d.rank2))
+}
+
+function plotD(i, j){
+	var w = 200, xm = 260, y=0
+	var vec = eigenVec[j]
+	var keys = Object.keys(vec)
+	var svg = d3.select("#info"+i).append('svg').attr("width", xm*2).attr("height", 20*keys.length)
+	for(var k in keys) {
+		f = parseFloat(vec[keys[k]])
+		svg.append('text')
+		.attr('x',1)
+		.attr('y',10*k+y+12)
+		.text(keys[k])
+		.style("font-size", "16px")
+		svg.append('rect')
+		.attr('x',f>0?xm:xm + w*f)
+		.attr('y',10*k+y)
+		.attr('width',w*Math.abs(f))
+		.attr('height',10)
+		.attr('fill', f>0?'#f00':'#00f' )
+		y += 5
+	}
+}
+
+function showinfo(d, i){
+	var root = d3.select("#info"+i)
+	root.selectAll("*").remove();
+	root.append("span").style("white-space", "nowrap").html(d.name)
+	var table = root.append("table")//.attr("id", "tableID")
+	table.append("thead").append("tr")
+	    .selectAll("th")
+	    .data(["Entity","Distance(bp)"].concat(vpclabels()))
+	    .enter().append("th")
+	    .append("a").attr("href",function(d,j) { return (j<2)?'javascript:void(0)':'javascript:plotD('+i+','+(j-2)+')'})
+	    .text(function(d) {
+		return d;
+	    });
+	table.append("tbody").selectAll('tr')
+	  .data(d)
+	  .enter()
+	  .append("tr")
+	  .html(function(d,i) { return tdfill(d, i) })
+	//$('#tableID').dataTable({searching:false, paging:true, ordering:true, info:false, "order": [[ 1, "desc" ]]});
+	legend(root.append("span").style("white-space", "nowrap").attr("id", "info-legend"+i))
+}
+
+function strokecolor(d) {
+    return ("expr" in d) ? dColor(d.expr) : "#000";
+}
+
+function getNetstr(d, i) {
+	str = ''
+	for(var j in d.nodes) {
+		if('name' in d.nodes[j] && d.nodes[j].name != undefined)
+		str += d.nodes[j].name+"\r\n"
+	}
+	return str
+}
+
+function setPCs(d, l) {
+	var s=[], n=10
+	for(i=1;i<100;i++) {
+		if(Object.keys(d[0]).includes("PC"+i))
+			settings.pc = i
+		else
+			break
+	}
+	for (var i in d) {
+		d[i].start = parseInt(d[i].start)
+		d[i].end = parseInt(d[i].end)
+		d[i].PC1 = parseFloat(d[i].PC1)
+		if (d[i].name.indexOf('_')>=0) {
+			s.push({i: parseInt(i), seqnames: d[i].seqnames, start: d[i].start-l, end: d[i].end+l, id: trimstr(d[i].name,2)})
+			if (settings.high < d[i].PC1) settings.high = d[i].PC1
+			if (settings.low  > d[i].PC1) settings.low  = d[i].PC1
+		}
+	}
+	for (var i in s) {
+		dPCs[s[i].id] = []
+		for(var j=Math.max(s[i].i-n,0); j<Math.min(s[i].i+n, d.length-1); j++) {
+			if (s[i].seqnames==d[j].seqnames && s[i].start<d[j].start && s[i].end>d[j].end) {
+				dPCs[s[i].id].push(cloned(d[j],"dist",d[j].start-s[i].start-l))
+			}
+		}
+	}
+}
+
+function drawMain(error, json, dpc, pathways, prcomp) {
+	var fig = d3.select("#figures");
+	setPCs(dpc,500000);
+	
+	eigenVec = prcomp
+	// Remove the old subnetworks
+	fig.selectAll("div").remove();
+
+	// Add each subnetwork as an SVG wrapped in a div
+	json.subnetworks.forEach(function(d, i){console.log(i)
+		fig.append("div").html(""+d.nodes.length+" nodes&nbsp;"+pathways[i].name+"&nbsp;")
+		  .append("a")
+		  .attr("download", "subnetworks"+i+".txt")
+		  .attr("href", window.URL.createObjectURL(new Blob([getNetstr(d, i)], {type: 'text/plain'})))
+		  //.style("font-size", "75%")
+		  .text("Download as text file")
+
+		var g = fig.append("div").attr("id", "subnetwork"+i)
+					.attr("class", "subnetwork k" + d.nodes.length);
+
+		g.append("div")
+			.datum(d)
+			.attr("id", "network"+i)
+			.attr("class", "network")
+			.call(
+				subnetwork({style: styling, index: i})
+					.addNetworkLegend()
+					.addGradientLegend()
+	  		);
+
+	  	g.append("div")
+			.attr("id", "info"+i)
+			.attr("class", "m2")
+			.style("margin-bottom", "30px")
+	  	g.append("hr");
+	});
+
+}
+
+// gd3 subnetwork function
+function subnetwork(params) {
+  var params = params || {},
+	  style  = params.style || {},
+	  colorSchemes = style.colorSchemes || {};
+
+  var cold = style.cold || 'rgb(102, 178, 255)',
+	  edgeWidth = style.edgeWidth || 1.5,
+	  fontColor = style.fontColor || '#333',
+	  fontFamily = style.fontFamily || '"Helvetica","Arial"',
+	  fontSize = style.fontSize || 10,
+	  heatLegendHeight = style.heatLegendHeight || 30,
+	  heatLegendWidth = style.heatLegendWidth ||  100,
+	  height = style.height || 200,
+	  hot = style.hot || 'rgb(255, 51, 51)',
+	  margins = style.margins || {bottom: 0, left: 0, right: 0, top: 0},
+	  netLegendBox = style.netLegendBox || 15,
+	  netLegendWidth = style.netLegendWidth || 200,
+	  nodeRadius = style.nodeRadius || 10,
+	  strokeWidth = style.strokeWidth || 1.5,
+	  transitionTime = style.transitionTime || 500,
+	  width = style.width || 350;
+
+  var showNetworkLegend = false,
+	  showGradientLegend = false;
+
+  function chart(selection) {
+	selection.each(function(data) {
+	  //////////////////////////////////////////////////////////////////////////
+	  // General setup
+	  var edges = data.edges,
+		  nodes = data.nodes;
+
+	  // Select the svg element, if it exists.
+	  var fig = d3.select(this)
+		  .selectAll('svg')
+		  .data([data])
+		  .enter()
+			.append('svg');
+
+	  fig.attr('id', 'figure')
+		  .attr('height', height + margins.top + margins.bottom)
+		  .attr('width', width)
+		  .style('font-family', fontFamily)
+		  .style('font-size', fontSize);
+
+	  // Create the color scale
+	  var heatRange = nodes.map(function(n){ return Math.max(16100,n.rank) }).concat(nodes.map(function(n){ return Math.max(16100,n.rank2) })),
+		  color = d3.scale.linear()
+			  .domain([d3.min(heatRange), d3.max(heatRange)])
+			  .range(["#fff", hot])
+			  .nice();
+
+	  // Set up the force directed graph
+	  var force = d3.layout.force()
+		  .charge(-400)
+		  .linkDistance(40)
+		  .size([width, height]);
+
+	  // This drag function fixes nodes in place once they are dragged
+	  var drag = force.drag().on('dragstart', function(d) {
+		d.fixed = true;
+		d3.select(this).select('circle').style('stroke-opacity', 0);
+	  });
+
+	  // Set up scales
+	  var x = d3.scale.linear().range([0, width]),
+		  y = d3.scale.linear().range([0, height]);
+
+	  var links = loadLinks(edges, nodes);
+
+	  force.nodes(nodes)
+		  .links(links)
+		  .start();
+
+	  // Determine which networks are in the data
+	  var networks = [];
+	  for (var i = 0; i < links.length; i++) {
+		for (var j = 0; j < links[i].networks.length; j++) {
+		  if (networks.indexOf(links[i].networks[j]) == -1) {
+			networks.push(links[i].networks[j]);
+		  }
+		}
+	  }
+
+	  var numNets = networks.length,
+		  netLegendHeight = numNets * 10;
+
+	  // Make sure each network has a color
+	  if (colorSchemes.network == undefined) {
+		var colors = d3.scale.category20();
+		colorSchemes.network = {};
+		for (var i = 0; i < networks.length; i++) {
+		  colorSchemes.network[networks[i]] = colors(i);
+		}
+	  }
+
+	  // Draw the edges
+	  var link = fig.selectAll('.link')
+		  .data(links);
+
+	  var linkInNetwork = {},
+		  activeNetworks = {};
+
+	  for (var i = 0; i < networks.length; i++) {
+		var net = networks[i],
+			netName = net.split('.').join('');
+			netColor = colorSchemes.network[networks[i]];
+			activeNetworks[net] = true;
+
+		var inNet = fig.selectAll('.' + netName)
+				.data(links.filter(function (link) {
+				  return link.networks && link.networks.indexOf(net) != -1;
+				}))
+				.enter()
+				.append('line')
+				  .classed(netName, true)
+				  .style('stroke-width', edgeWidth)
+				  .style('stroke', netColor);
+
+			linkInNetwork[net] = inNet;
+	  }
+
+	  // Draw the nodes
+	  // Keep the circles and text in the same group for better dragging
+	  var circle = fig.append('svg:g')
+		  .selectAll('node')
+		  .data(nodes)
+		  .enter()
+		  .append('svg:g')
+		  .style('cursor', 'move')
+		  .call(force.drag)
+		  .on('dblclick', function(d) {
+		        d.fixed = d.fixed ? false : true;
+		        d3.select(this).select('circle').style('stroke-opacity', 1);
+		  })
+		  .on('click', function(d) {console.log(d)
+		        showinfo(dPCs[d.name], params.index, [-5,5])
+		  })
+		  .on("mouseover", function(d) {
+		        showtooltip(d);
+		        return tooltip.style("visibility", "visible");
+		  })
+		  .on("mousemove", function(){
+		        return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");
+		  })
+		  .on("mouseout", function(){
+		        return tooltip.style("visibility", "hidden");
+		  });
+
+	  circle.append('path')
+		  .attr("d", d3.svg.symbol()
+		    .type(function(d) { return d3.svg.symbolTypes[3];  })
+		    .size(function(d) { return nodeRadius*nodeRadius*4 }))
+		  .attr('fill', function(d) { return color(d.rank); })
+		  .style('stroke-width', strokeWidth)
+		  //.style('opacity', function(d) {return fillopacity(d, params.index);})
+		  .style('stroke', function(d) {return strokecolor(d);});
+
+	  circle.append('rect')
+	      .attr("x", 0)
+	      .attr("width", nodeRadius -strokeWidth/2)
+	      .attr("y", nodeRadius * (-1) +strokeWidth/2)
+	      .attr("height", nodeRadius * 2 -strokeWidth)
+	      .attr('fill', function(d) { return color(d.rank2); })
+
+	  circle.append('text')
+		  .attr('x', nodeRadius)
+		  .attr('y', '.31em')
+		  .style('fill', fontColor)
+		  .style('font-size', fontSize)
+		  .text(function(d) { return d.name; });
+
+	  // Make sure nodes don't go outside the borders of the SVG
+	  force.on('tick', function() {
+		circle.attr('transform', function(d) {
+		  d.x = Math.max(nodeRadius, Math.min(width - nodeRadius, d.x));
+		  d.y = Math.max(nodeRadius, Math.min(height - nodeRadius, d.y));
+		  return 'translate(' + d.x + ',' + d.y + ')';
+		});
+
+		networks.forEach(function(net, i) {
+		  var offset = edgeWidth * (i = numNets / 2);
+		  linkInNetwork[net]
+			  .attr('x1', function(d) { return d.source.x + offset; })
+			  .attr('y1', function(d) { return d.source.y + offset; })
+			  .attr('x2', function(d) { return d.target.x + offset; })
+			  .attr('y2', function(d) { return d.target.y + offset; });
+		});
+	  }); // end force
+
+	  //////////////////////////////////////////////////////////////////////////
+	  // DRAW LEGENDS
+	  function renderNetworkLegend() {
+		var netLegend = fig.selectAll(".net-group")
+			.data(networks).enter()
+			.append("g")
+				.style("font-size", 12)
+				.on("click", function(n){
+					var active = activeNetworks[n];
+					activeNetworks[n] = !active;
+					linkInNetwork[n].transition().duration(transitionTime)
+						.style("stroke-opacity", active ? 0 : 1);
+
+					d3.select(this).transition().duration(transitionTime)
+						.style("stroke-opacity", active ? 0.5 : 1)
+						.style("fill-opacity", active ? 0.5 : 1);
+				});
+
+		netLegend.append("line")
+			.attr("x1", 0)
+			.attr("x2", netLegendBox)
+			.style("stroke-width", edgeWidth)
+			.style("stroke", function(n){ return colorSchemes.network[n]; });
+
+		netLegend.append("text")
+			.attr("x", 8 + netLegendBox)
+			.attr("y", 3)
+			.text(function(n){ return n; });
+
+		netLegend.attr("transform", function(d, i){
+			return "translate(" + (width-d3.select(this).node().getBBox().width) + "," + ((i+1)*netLegendBox) + ")";
+		})
+
+	  } // end renderNetworkLegend()
+
+	  function renderGradientLegend() {
+		var heatLegend = selection.append('div')
+			.attr('id', 'subnetwork-legend')
+			.style('width', heatLegendWidth + 'px');
+
+		var gradient = heatLegend.append('svg')
+			.attr('width', heatLegendWidth)
+			.attr('height', heatLegendHeight);
+
+		// Create a unique ID for the heat gradient
+		var gradientID = 'heat_gradient' + Date.now();
+		gradient.append('svg:defs')
+			.append('svg:linearGradient')
+			  .attr('x1', '0%')
+			  .attr('y1', '0%')
+			  .attr('x2', '100%')
+			  .attr('y2', '0%')
+			  .attr('id', gradientID)
+			  .call(function (gradient) {
+		//		gradient.append('svg:stop')
+		//		  .attr('offset', '0%')
+		//		  .attr('style', 'stop-color:' + cold + ';stop-opacity:1');
+				gradient.append('svg:stop')
+				  .attr('offset', '0%')
+				  .attr('style', 'stop-color:#fff;stop-opacity:1');
+				gradient.append('svg:stop')
+				  .attr('offset', '100%')
+				  .attr('style', 'stop-color:' + hot + ';stop-opacity:1');
+			  });
+
+		gradient.append('rect')
+			.attr('width', heatLegendWidth)
+			.attr('height', heatLegendHeight)
+			.style('fill', 'url(#' + gradientID + ')');
+
+		var labels = heatLegend.append('div')
+			.style('clear', 'both');
+		var format = d3.format("g");
+		
+		heatLegend.append('span')
+		  .style('float', 'left')
+		  .text(heatFormat(d3.min(heatRange)));
+
+		heatLegend.append('span')
+		  .style('float', 'right')
+		  .text(heatFormat(d3.max(heatRange)));
+		  
+	  } // end renderGradientLegend()
+
+	  if(showNetworkLegend) {
+		renderNetworkLegend();
+	  }
+	  if(showGradientLegend) {
+		renderGradientLegend();
+	  }
+	  
+	  //////////////////////////////////////////////////////////////////////////
+	  // UTILITY FUNCTIONS
+	  // Returns list of links between a given set of nodes and an edge list
+	  function loadLinks(edges, nodes) {
+		var links = [];
+
+		for (var i = 0; i < nodes.length; i++) {
+		  var u = nodes[i].name;
+		  for(var j = 0; j < nodes.length; j++) {
+			var v = nodes[j].name;
+			for (var k = 0; k < edges.length; k++) {
+			  var src = edges[k].source,
+				  tgt = edges[k].target;
+			  if ( (u == src && v == tgt) || (u == tgt && v == src) ) {
+				links.push({
+				  'source': nodes[i],
+				  'target': nodes[j],
+				  'weight': edges[k].weight,
+				  'networks': edges[k].networks
+				})
+			  }
+			}
+		  }
+		}
+
+		return links;
+	  } // end loadLinks()
+	});
+  } // end chart()
+
+
+  chart.addNetworkLegend = function () {
+	showNetworkLegend = true;
+	return chart;
+  }
+
+  chart.addGradientLegend = function () {
+	showGradientLegend = true;
+	return chart;
+  }
+
+  return chart;
+}
+
+queue()
+	.defer(d3.json, 'CLLnets.json')
+	.defer(d3.csv, 'CLLseq.csv')
+	.defer(d3.csv, 'CLLpathways.csv')
+	.defer(d3.csv, 'CLLcomp.csv')
+	.await(drawMain);
+
+</script>
