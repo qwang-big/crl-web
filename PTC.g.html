@@ -157,12 +157,23 @@ function legend(panel) {
 	panel.append('span').text(shortd(settings.high))
 }
 
+function strsplit(x, s, part) {
+    if (x.indexOf(s)<0)
+      return x
+    else if (part==1)
+      return x.substr(0,x.indexOf(s))
+    else if (part==2)
+      return x.substr(x.indexOf(s)+1,x.length)
+    else
+      return x
+}
+
 function tdfill(d, i) {
 	var colord = d3.scale.linear()
 	  .domain([settings.low, 0, settings.high])
 	  .range(["#00f", "#fff", "#f00"])
 	  .nice();
-	var str = '<td><a href="http://www.genecards.org/Search/Keyword?queryString='+d.id+'" target="_blank">'+d.id+'</a></td><td>'+d.dist+'</td>'
+	var str = '<td><a href="http://www.genecards.org/Search/Keyword?queryString='+strsplit(d.name,'_',1)+'" target="_blank">'+d.name+'</a></td><td>'+d.dist+'</td>'
 	for(var j=1; j<=settings.pc; j++)
 		str += '<td style="background:'+colord(parseFloat(d["PC"+j]))+'">&nbsp;</td>'
 	return str
@@ -226,7 +237,7 @@ function plotD(i, j){
 function showinfo(d, i){
 	var root = d3.select("#info"+i)
 	root.selectAll("*").remove();
-	root.append("span").style("white-space", "nowrap").html(d.name)
+	root.append("span").style("white-space", "nowrap").text(d.name)
 	var table = root.append("table")//.attr("id", "tableID")
 	table.append("thead").append("tr")
 	    .selectAll("th")
@@ -237,7 +248,7 @@ function showinfo(d, i){
 		return d;
 	    });
 	table.append("tbody").selectAll('tr')
-	  .data(d)
+	  .data(dPCs[d.name])
 	  .enter()
 	  .append("tr")
 	  .html(function(d,i) { return tdfill(d, i) })
@@ -279,7 +290,7 @@ function setPCs(d, l) {
 	for (var i in s) {
 		dPCs[s[i].id] = []
 		for(var j=Math.max(s[i].i-n,0); j<Math.min(s[i].i+n, d.length-1); j++) {
-			if (s[i].seqnames==d[j].seqnames && s[i].start<d[j].start && s[i].end>d[j].end) {
+			if ((d[j].name.indexOf(s[i].id)==0||d[j].name.indexOf('_')<0) && s[i].seqnames==d[j].seqnames && s[i].start<d[j].start && s[i].end>d[j].end) {
 				dPCs[s[i].id].push(cloned(d[j],"dist",d[j].start-s[i].start-l))
 			}
 		}
@@ -462,7 +473,7 @@ function subnetwork(params) {
 		        d3.select(this).select('circle').style('stroke-opacity', 1);
 		  })
 		  .on('click', function(d) {console.log(d)
-		        showinfo(dPCs[d.name], params.index, [-5,5])
+		        showinfo(d, params.index, [-5,5])
 		  })
 		  .on("mouseover", function(d) {
 		        showtooltip(d);
