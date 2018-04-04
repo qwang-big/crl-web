@@ -498,10 +498,10 @@ function subnetwork(params) {
 }
 
 queue()
-	.defer(d3.json, 'PTCnets1.json')
-	.defer(d3.csv, 'PTCseq.csv')
-	.defer(d3.json, 'PTCpathways.json')
-	.defer(d3.csv, 'PTCcomp.csv')
+	.defer(d3.json, 'TSCnets1.json')
+	.defer(d3.csv, 'TSCseq.csv')
+	.defer(d3.json, 'TSCpathways.json')
+	.defer(d3.csv, 'TSCcomp.csv')
 	.await(drawMain);
 
 </script>

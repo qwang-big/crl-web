@@ -143,8 +143,6 @@ function autocomplete(parent) {
             function search() {
 
                 var str=_searchTerm;
-                console.log("searching on " + _searchTerm);
-                console.log("-------------------");
 
                 if (str.length >= _minLength) {
                     _matches = [];
