@@ -96,7 +96,7 @@ var styling = {
 	nodeRadius: 10,
 	strokeWidth: 4,
 	cold: 'rgb(102, 178, 255)',
-	hot: 'rgb(255, 51, 51)'
+	hot: 'rgb(238,130,238)'
 }
 
 var dColor = d3.scale.linear()
@@ -438,11 +438,13 @@ function subnetwork(params) {
 		
 		heatLegend.append('span')
 		  .style('float', 'left')
-		  .text(heatFormat(d3.min(heatRange)));
+		  .text("10%")
+		  //.text(heatFormat(d3.min(heatRange)));
 
 		heatLegend.append('span')
 		  .style('float', 'right')
-		  .text(heatFormat(d3.max(heatRange)));
+		  .text("0%")
+		  //.text(heatFormat(d3.max(heatRange)));
 		  
 	  } // end renderGradientLegend()
 
