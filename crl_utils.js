@@ -173,6 +173,10 @@ function legend2(cols, panel) {
 	panel.append('span').text(shortd(settings.high))
 }
 
+function round2p(num) {    
+    return Math.round(num * 100);
+}
+
 function heatmapImpl() {
 	  var d = curMap
 	  var root = d3.select("#heatmap")
@@ -238,11 +242,22 @@ function heatmapImpl() {
 				y += h
 	      for(var j=0; j<data[i].length; j++) {
 		      plot.append('rect')
+      	  .datum(round2p(code.indexOf(data[i].charAt(j))/code.length))
 		      .attr('x',x)
 		      .attr('y',y)
 		      .attr('width',w)
 		      .attr('height',h)
 		      .attr('fill', cols[code.indexOf(data[i].charAt(j))])
+			    .on("mouseover", function(s){
+		          tooltip.html(s+"%")
+			        return tooltip.style("visibility", "visible");
+		      })
+			    .on("mousemove", function(){
+			         return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px")
+			    })
+			    .on("mouseout", function(){
+			         return tooltip.style("visibility", "hidden")
+			    })
 				  y += h
 		    }
       }else{
