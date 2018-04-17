@@ -123,7 +123,8 @@ function drawMain(error, json, dpc, pathway, prcomp) {
 	json.subnetworks.forEach(function(d, i){
 		div = fig.append("div")
     div.append("span").text("Pathways:").style("margin-right", "5px")
-    div.append("select").datum(i)
+    sel = div.append("select")
+      sel.datum(i)
       .on("change", function(i) {
         j = d3.select(this).property("value")
 		    circles[i].select('path').style('stroke', function(d) {
@@ -136,7 +137,8 @@ function drawMain(error, json, dpc, pathway, prcomp) {
       .data(i in pathways?pathways[i].pathways:["no enrichment"]).enter()
 	    .append("option")
 	    .attr("value", function(d, i){ return i})
-	    .text(function(d){ return d})
+	    .text(function(d,j){ return d+" "+shortd(pathways[i].pvals[j])+" "+j})
+    sel.property("selectedIndex",pathways[i].sel)
 
 		div.append("span").style("margin-left", "5px")
 		  .append("a")
@@ -500,7 +502,7 @@ function subnetwork(params) {
 }
 
 queue()
-	.defer(d3.json, 'NPCnets1.json')
+	.defer(d3.json, 'NPCnets.json')
 	.defer(d3.csv, 'NPCseq.csv')
 	.defer(d3.json, 'NPCpathways.json')
 	.defer(d3.csv, 'NPCcomp.csv')

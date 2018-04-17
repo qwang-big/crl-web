@@ -55,8 +55,8 @@ function plotPt(data){
 
   bar.append("svg:rect")
     .on('click', function(d,i) {showPtinfo(d.name)})
-    .attr("x", function(d) { return x(d.promenh) })
-    .attr("y", function(d) {return y(d.promonly)})      
+    .attr("x", function(d) { return x(d.rank) })
+    .attr("y", function(d) {return y(d.rank2)})      
     .attr("height", function(d) { return highlights.indexOf(d.name)<0 ? 3 : 9})
     .attr("width", function(d) { return highlights.indexOf(d.name)<0 ? 3 : 9})
     .attr("fill",function(d) { return highlights.indexOf(d.name)<0 ? "#ccc" : "#f00"})
@@ -123,7 +123,7 @@ function ashortd(d) {
 }
 
 function getReadableIndex(d, w) {
-	return (d*w/1000000).toFixed(2)+"Mb"
+	return (d/1000000).toFixed(2)+"Mb"
 }
 
 function zoomIn(d) {
@@ -188,21 +188,21 @@ function heatmapImpl() {
 	  var h=20, y=0, x=0, W=1500, H=h*names.length
 	  var s = parseInt(d.s)
 	  var e = parseInt(d.e)
-	  var p = e - s
-	  s += parseInt((p - p/scale)/2)
-	  e -= parseInt((p - p/scale)/2)
+	  var p = e - s, n = parseInt((p - p/scale)/2)
+	  s += n
+	  e -= n
 	  p  = p/scale
 	  var w = Math.max(W/p, 1)
 	  var plot = root.append('svg').attr("width", W+150).attr("height", H+h*2)
 	  plot.append('text')
 	  .attr('x',0)
 	  .attr('y',h-4)
-	  .text(getReadableIndex(s,2000))
+	  .text(getReadableIndex(d.start-p*1000))
 	  .style("font-size", "16px")
 	  plot.append('text')
 	  .attr('x',W)
 	  .attr('y',h-4)
-	  .text(getReadableIndex(e,2000))
+	  .text(getReadableIndex(d.end+p*1000))
 	  .style("font-size", "16px")
     plot.append('rect')
     .attr('x',0)

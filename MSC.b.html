@@ -37,7 +37,7 @@ var jsonUrl = "https://raw.githubusercontent.com/qwang-big/crl-data/master/json/
 			    ids[id] = seq[i].name
 					if (seq[i].name.indexOf('_')>0) {
 						geneName = seq[i].name.substr(0,seq[i].name.indexOf('_'))
-						genes.push({name:geneName, id:id})
+						genes.push({name:geneName, start:parseInt(seq[i].start), end:parseInt(seq[i].end), id:id})
 					}
 			}
         setAutocomplete();
