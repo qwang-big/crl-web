@@ -61,7 +61,7 @@
 </style>
 <body>
 <div class="container">
-	<h1>Top 15 densely connected subnetworks by gene ranking</h1>
+	<h1 id="htop">Top 10 densely connected subnetworks by gene ranking</h1>
 	<hr/>
 
 	<div id="figures">
@@ -117,7 +117,8 @@ function drawMain(error, json, dpc, pathway, prcomp) {
   pathways = pathway
 	eigenVec = prcomp
 	// Remove the old subnetworks
-	fig.selectAll("div").remove();
+	fig.selectAll("div").remove()
+  d3.select("#htop").text("Top "+json.subnetworks.length+" densely connected subnetworks by gene ranking")
 
 	// Add each subnetwork as an SVG wrapped in a div
 	json.subnetworks.forEach(function(d, i){

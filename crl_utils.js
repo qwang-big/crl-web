@@ -177,14 +177,44 @@ function round2p(num) {
     return Math.round(num * 100);
 }
 
+function getscales(seqs, s, e) {
+	var a=code.length-1, b=0
+  for(var i=s; i<e; i++) {
+		if (i in seqs){
+			x = getscale(seqs[i])
+			a = Math.min(a,x[0])
+			b = Math.max(b,x[1])
+		}
+	}
+	return [a,Math.floor((a+b)/2),b]
+}
+
+function getscale(seq) {
+	var a=code.length-1, b=0
+	for(var i=0; i<seq.length; i++) {
+		x = code.indexOf(seq.charAt(i))
+		a = Math.min(a,x)
+		b = Math.max(b,x)
+  }
+	return [a,b]
+}
+
+function getIntEnh(genename, ti) {
+	var res = []
+	for(var i in inta[genename][ti]){
+		res.push(intc.Enh[inta[genename][ti][i]])
+	}
+	return res
+}
+
 function heatmapImpl() {
 	  var d = curMap
 	  var root = d3.select("#heatmap")
+	  root.selectAll("*").remove()
     var tooltip = d3.select("#tooltip")
     color = d3.scale.linear().domain([d3.min(dPC),0,d3.max(dPC)]).range(["#00f", "#fff", "#f00"]).nice()
-	  legend(cols, "#legend", "Epigenome data: low", "high")
+	  legend(cols, "#legend", "Epigenome intensity percentage scale: 0%", "100%")
 	  legend(col2, "#legend2", "PC1: "+shortd(d3.min(dPC)), shortd(d3.max(dPC)))
-	  root.selectAll("*").remove();
 	  var h=20, y=0, x=0, W=1500, H=h*names.length
 	  var s = parseInt(d.s)
 	  var e = parseInt(d.e)
@@ -214,6 +244,7 @@ function heatmapImpl() {
     //.style("fill-opacity",0)
     //.style('stroke-width', 0.3)
     //.style('stroke', '#000')
+    color2= d3.scale.linear().domain(getscales(data, s, e)).range(["#BEBEBE", "#FFFFFF", "#FF0000"]).nice()
 	  for(var i=s; i<e; i++) {
       y = h
 			if (i in data){
@@ -247,7 +278,7 @@ function heatmapImpl() {
 		      .attr('y',y)
 		      .attr('width',w)
 		      .attr('height',h)
-		      .attr('fill', cols[code.indexOf(data[i].charAt(j))])
+		      .attr('fill', color2(code.indexOf(data[i].charAt(j))))
 			    .on("mouseover", function(s){
 		          tooltip.html(s+"%")
 			        return tooltip.style("visibility", "visible");
@@ -258,6 +289,22 @@ function heatmapImpl() {
 			    .on("mouseout", function(){
 			         return tooltip.style("visibility", "hidden")
 			    })
+					if (i == d.id)
+						plot.append("svg:svg")
+					  .append('path')
+					  .attr('transform', function(d) { return 'translate(' + (x+w/2) + ',' + (h-5) + ')' })
+						.attr("d", d3.svg.symbol()
+						.type(function(d) { return d3.svg.symbolTypes[4] })
+						.size(function(d) { return 40 }))
+						.attr('fill', function(d) { return "#f00" })
+					else if (getIntEnh(d.name,intc.sel).indexOf(ids[i])!=-1)
+						plot.append("svg:svg")
+					  .append('path')
+					  .attr('transform', function(d) { return 'translate(' + (x+w/2) + ',' + (h-5) + ')' })
+						.attr("d", d3.svg.symbol()
+						.type(function(d) { return d3.svg.symbolTypes[4] })
+						.size(function(d) { return 40 }))
+						.attr('fill', function(d) { return "#A020F0" })
 				  y += h
 		    }
       }else{
@@ -268,14 +315,6 @@ function heatmapImpl() {
 	      .attr('height',H)
 	      .attr('fill', '#C7EDCC')
       }
-			if (i == d.id)
-	  		plot.append("svg:svg")
-	      .append('path')
-	      .attr('transform', function(d) { return 'translate(' + (x+w/2) + ',' + (h-5) + ')' })
-				.attr("d", d3.svg.symbol()
-				.type(function(d) { return d3.svg.symbolTypes[4] })
-				.size(function(d) { return 40 }))
-				.attr('fill', function(d) { return "#f00" })
       x += w
 		}
     y = h+h
@@ -359,7 +398,7 @@ function range(d, i, n) {
 }
 
 function showtooltip(d) {
-	tooltip.html('PromEnh: '+Math.max(1,d.rank)+'<br>PromOnly: '+Math.max(1,d.rank2))
+	tooltip.html('PromEnh: '+shortd(100-Math.max(1,d.rank)/179)+'%<br>PromOnly: '+shortd(100-Math.max(1,d.rank2)/179)+'%')
 }
 
 function plotD(i, j){
