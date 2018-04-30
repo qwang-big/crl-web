@@ -19,6 +19,10 @@ function makelist(){
 	})
 }
 
+function rank2p(d){
+	return shortd(100-Math.max(1,d)/179)
+}
+
 function highlight(i){
 	chart.selectAll(".bar").remove()
 	highlights = genesrc[i]
@@ -201,6 +205,7 @@ function getscale(seq) {
 
 function getIntEnh(genename, ti) {
 	var res = []
+	if (genename in inta && ti in inta[genename])
 	for(var i in inta[genename][ti]){
 		res.push(intc.Enh[inta[genename][ti][i]])
 	}
@@ -397,8 +402,8 @@ function range(d, i, n) {
 	return a;
 }
 
-function showtooltip(d) {
-	tooltip.html('PromEnh: '+shortd(100-Math.max(1,d.rank)/179)+'%<br>PromOnly: '+shortd(100-Math.max(1,d.rank2)/179)+'%')
+function showtooltip(text) {
+	tooltip.html(text)
 }
 
 function plotD(i, j){
@@ -507,6 +512,28 @@ function getNetstr(d, i) {
 		str += d.nodes[j].name+"\r\n"
 	}
 	return str
+}
+
+function setRanks(data) {
+	prom =[], rank =[]
+	for(i in data) {
+		prom[data[i].PromOnly]=data.length-i
+	}
+	for(i in data) {
+		rank[data[i].PromEnh]={"name": data[i].PromEnh, "rank": data.length-i, "rank2": prom[data[i].PromEnh]}
+	}
+
+}
+
+function setRank2(data) {
+	prom =[], rank =[]
+	for(i in data) {
+		prom[data[i].PromOnly]=data.length-i
+	}
+	for(i in data) {
+		rank.push({"name": data[i].PromEnh, "rank": data.length-i, "rank2": prom[data[i].PromEnh]})
+	}
+
 }
 
 function setPCs(d, l) {

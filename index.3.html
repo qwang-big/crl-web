@@ -138,15 +138,9 @@ var tooltip = d3.select("#tooltip")
     .style("font-size", "16px")
 
 function drawMain(error,data,dpc,prcomp){
-	prom =[], rank =[]
 	eigenVec = prcomp
-	setPCs(dpc,500000);
-	for(i in data) {
-		prom[data[i].PromOnly]=data.length-i
-	}
-	for(i in data) {
-		rank.push({"name": data[i].PromEnh, "rank": data.length-i, "rank2": prom[data[i].PromEnh]})
-	}
+	setPCs(dpc,500000)
+	setRank2(data)
 	plotPt(rank);
 }
 

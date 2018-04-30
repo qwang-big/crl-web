@@ -61,19 +61,15 @@
 </style>
 <body>
 <div class="container">
-	<h1>Top 15 densely connected subnetworks by gene ranking</h1>
+	<h1 id="htop"></h1>
 	<hr/>
 
 	<div id="figures">
 	</div>
 </div>
-<!--script src="assets/jssor.slider-21.1.5.min.js"></script-->
 <script src="d3.min.js"></script>
 <script src="queue.v1.min.js"></script>
 <script type="text/javascript" src="crl_utils.js"></script>
-<!--link rel="stylesheet" type="text/css" href="assets/jquery.dataTables.min.css"-->
-<!--script src="assets/jquery.min.js"></script-->
-<!--script src="assets/jquery.dataTables.min.js"></script-->
 <script>
 var heatFormat = d3.format(".3r");
 
@@ -108,66 +104,7 @@ var col2 = ["#0000FF","#1A1AFF","#3333FF","#4D4DFF","#6666FF","#8080FF","#9999FF
 "#B3B3FF","#CCCCFF","#E6E6FF","#FFFFFF","#FFE6E6","#FFCCCC","#FFB3B3",
 "#FF9999","#FF8080","#FF6666","#FF4D4D","#FF3333","#FF1A1A","#FF0000"]
 
-var dPCs=[], eigenVec=[], pathways = [], circles = [], settings = {low:0, high:0, nrank:17888}
-
-
-function drawMain(error, json, dpc, pathway, prcomp) {
-	var fig = d3.select("#figures");
-	setPCs(dpc,500000);
-  pathways = pathway
-	eigenVec = prcomp
-	// Remove the old subnetworks
-	fig.selectAll("div").remove();
-
-	// Add each subnetwork as an SVG wrapped in a div
-	json.subnetworks.forEach(function(d, i){
-		div = fig.append("div")
-    div.append("span").text("Pathways:").style("margin-right", "5px")
-    sel = div.append("select")
-      sel.datum(i)
-      .on("change", function(i) {
-        j = d3.select(this).property("value")
-		    circles[i].select('path').style('stroke', function(d) {
-          if (!(i in pathways)) return '#000';
-		      return pathways[i].genes[j].indexOf(d.name)>=0?"#f00":'#000'
-		    })
-      })
-	    .style("width", "300px")
-      .selectAll('option')
-      .data(i in pathways?pathways[i].pathways:["no enrichment"]).enter()
-	    .append("option")
-	    .attr("value", function(d, i){ return i})
-	    .text(function(d,j){ return d+" "+shortd(pathways[i].pvals[j])+" "+j})
-    sel.property("selectedIndex",pathways[i].sel)
-
-		div.append("span").style("margin-left", "5px")
-		  .append("a")
-		  .attr("download", "subnetworks"+i+".txt")
-		  .attr("href", window.URL.createObjectURL(new Blob([getNetstr(d, i)], {type: 'text/plain'})))
-		  //.style("font-size", "75%")
-		  .text("Download as text file")
-
-		var g = fig.append("div").attr("id", "subnetwork"+i)
-					.attr("class", "subnetwork k" + d.nodes.length);
-
-		g.append("div")
-			.datum(d)
-			.attr("id", "network"+i)
-			.attr("class", "network")
-			.call(
-				subnetwork({style: styling, index: i})
-					.addNetworkLegend()
-					.addGradientLegend()
-	  		);
-
-	  	g.append("div")
-			.attr("id", "info"+i)
-			.attr("class", "m2")
-			.style("margin-bottom", "30px")
-	  	g.append("hr");
-	});
-
-}
+var rank, dPCs=[], eigenVec=[], pathways = [], circles = [], settings = {low:0, high:0, nrank:17888}
 
 // gd3 subnetwork function
 function subnetwork(params) {
@@ -216,16 +153,15 @@ function subnetwork(params) {
 		  .style('font-size', fontSize);
 
 	  // Create the color scale
-	  var heatRange = nodes.map(function(n){ return Math.max(16100,n.rank) }).concat(nodes.map(function(n){ return Math.max(16100,n.rank2) })),
-		  color = d3.scale.linear()
-			  .domain([d3.min(heatRange), d3.max(heatRange)])
+	  var color = d3.scale.linear()
+			  .domain([0.9*settings.nrank|0, settings.nrank])
 			  .range(["#fff", hot])
 			  .nice();
 
 	  // Set up the force directed graph
 	  var force = d3.layout.force()
-		  .charge(-400)
-		  .linkDistance(40)
+		  .charge(-800)
+		  .linkDistance(80)
 		  .size([width, height]);
 
 	  // This drag function fixes nodes in place once they are dragged
@@ -309,7 +245,7 @@ function subnetwork(params) {
 		        showinfo(d, params.index)
 		  })
 		  .on("mouseover", function(d) {
-		        showtooltip(d);
+		        showtooltip('PromEnh: '+rank2p(rank[d.name].rank)+'%<br>PromOnly: '+rank2p(rank[d.name].rank2)+'%');
 		        return tooltip.style("visibility", "visible");
 		  })
 		  .on("mousemove", function(){
@@ -323,7 +259,7 @@ function subnetwork(params) {
 		  .attr("d", d3.svg.symbol()
 		    .type(function(d) { return d3.svg.symbolTypes[3];  })
 		    .size(function(d) { return nodeRadius*nodeRadius*4 }))
-		  .attr('fill', function(d) { return color(d.rank); })
+		  .attr('fill', function(d) { return color(rank[d.name].rank); })
 		  .style('stroke-width', strokeWidth)
 		  //.style('opacity', function(d) {return fillopacity(d, params.index);})
 		  .style('stroke', function(d) {
@@ -336,7 +272,7 @@ function subnetwork(params) {
 	      .attr("width", nodeRadius -strokeWidth/2)
 	      .attr("y", nodeRadius * (-1) +strokeWidth/2)
 	      .attr("height", nodeRadius * 2 -strokeWidth)
-	      .attr('fill', function(d) { return color(d.rank2); })
+	      .attr('fill', function(d) { return color(rank[d.name].rank2); })
 
 	  circle.append('text')
 		  .attr('x', nodeRadius)
@@ -501,11 +437,72 @@ function subnetwork(params) {
   return chart;
 }
 
+function drawMain(error, json, dpc, pathway, prcomp, rankdata) {
+	var fig = d3.select("#figures")
+	setPCs(dpc,500000)
+	setRanks(rankdata)
+  pathways = pathway
+	eigenVec = prcomp
+	// Remove the old subnetworks
+	fig.selectAll("div").remove()
+  d3.select("#htop").text("Top "+json.subnetworks.length+" densely connected subnetworks by gene ranking")
+
+	// Add each subnetwork as an SVG wrapped in a div
+	json.subnetworks.forEach(function(d, i){
+		div = fig.append("div")
+    div.append("span").text("Pathways:").style("margin-right", "5px")
+    sel = div.append("select")
+      sel.datum(i)
+      .on("change", function(i) {
+        j = d3.select(this).property("value")
+		    circles[i].select('path').style('stroke', function(d) {
+          if (!(i in pathways)) return '#000';
+		      return pathways[i].genes[j].indexOf(d.name)>=0?"#f00":'#000'
+		    })
+      })
+	    .style("width", "300px")
+      .selectAll('option')
+      .data(i in pathways?pathways[i].pathways:["no enrichment"]).enter()
+	    .append("option")
+	    .attr("value", function(d, i){ return i})
+	    .text(function(d,j){ return d+" "+shortd(pathways[i].pvals[j])+" "+j})
+    sel.property("selectedIndex",pathways[i].sel)
+
+		div.append("span").style("margin-left", "5px")
+		  .append("a")
+		  .attr("download", "subnetworks"+i+".txt")
+		  .attr("href", window.URL.createObjectURL(new Blob([getNetstr(d, i)], {type: 'text/plain'})))
+		  //.style("font-size", "75%")
+		  .text("Download as text file")
+
+		var g = fig.append("div").attr("id", "subnetwork"+i)
+					.attr("class", "subnetwork k" + d.nodes.length);
+
+		g.append("div")
+			.datum(d)
+			.attr("id", "network"+i)
+			.attr("class", "network")
+			.call(
+				subnetwork({style: styling, index: i})
+					.addNetworkLegend()
+					.addGradientLegend()
+	  		);
+
+	  	g.append("div")
+			.attr("id", "info"+i)
+			.attr("class", "m2")
+			.style("margin-bottom", "30px")
+	  	g.append("hr");
+	});
+
+}
+
 queue()
 	.defer(d3.json, 'TSCnets.json')
 	.defer(d3.csv, 'TSCseq.csv')
 	.defer(d3.json, 'TSCpathways.json')
 	.defer(d3.csv, 'TSCcomp.csv')
+	.defer(d3.csv, 'TSCrank.csv')
 	.await(drawMain);
 
 </script>
