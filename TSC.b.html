@@ -88,8 +88,8 @@ var jsonUrl = "https://raw.githubusercontent.com/qwang-big/crl-data/master/json/
 queue()
 	.defer(d3.csv, 'TSCname.csv')
 	.defer(d3.csv, "TSCseq.csv")
-	.defer(d3.csv, "TSCint.csv")
-	.defer(d3.json, "TSCint.json")
+	.defer(d3.csv, "SCint.csv")
+	.defer(d3.json, "SCint.json")
 	.await(drawMain);
 </script>
     <link rel="stylesheet" href="fonts/bariol/bariol.css"/>

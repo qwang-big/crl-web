@@ -220,6 +220,7 @@ function rocChart(id, data, options) {
     svg.append("path")
       .attr("class", "curve")
       .style("stroke", stroke)
+      .style("stroke-width", 7)
       .attr("d", curve(data, tpr))
       .on('mouseover', function(d) {
 
