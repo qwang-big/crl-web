@@ -1,1 +1,1 @@
-tar zcvf html.tar.gz net.html rank.html rna.html roc.html browse.html images fonts styles js
+tar zcvf html.tar.gz stat.html net.html browse.html rank.html rna.html roc.html fonts styles js
