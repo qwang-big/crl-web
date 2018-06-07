@@ -63,6 +63,7 @@
 </style>
 </head>
 <body>
+<img src="loading.gif" id="loading"/>
 <div class="container">
 	<h1 id="htop"></h1>
 	<hr/>
@@ -441,6 +442,7 @@ function subnetwork(params) {
 }
 
 function drawMain(error, json, dpc, pathway, prcomp, rankdata) {
+	d3.select("#loading").style("display", "none")
 	var fig = d3.select("#figures")
 	setPCs(dpc,500000)
 	setRanks(rankdata)

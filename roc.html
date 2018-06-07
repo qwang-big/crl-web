@@ -33,6 +33,7 @@ path {
 </head>
 <body>
 
+<img src="loading.gif" id="loading"/>
 <div id="roc" style="position:absolute;width:800px"> </div>
 <div id="lists" style="position:relative;left:800px;width:400px"></div>
 
@@ -88,6 +89,7 @@ function rochart(j) {
 }
 
 function drawMain(error, data, marker) {
+	d3.select("#loading").style("display", "none")
   var pdp=0, edp=0
   var j = 0
 	for(var i in marker) {

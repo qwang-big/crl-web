@@ -243,16 +243,17 @@ function heatmapImpl() {
 	  e -= n
 	  p  = p/scale
 	  var w = Math.max(W/p, 1)
+	  var start=d.start-p*1000, end=d.end+p*1000
 	  var plot = root.append('svg').attr("width", W+150).attr("height", H+h*2)
 	  plot.append('text')
 	  .attr('x',0)
 	  .attr('y',h-4)
-	  .text(getReadableIndex(d.start-p*1000))
+	  .text(getReadableIndex(start))
 	  .style("font-size", "16px")
 	  plot.append('text')
 	  .attr('x',W)
 	  .attr('y',h-4)
-	  .text(getReadableIndex(d.end+p*1000))
+	  .text(getReadableIndex(end))
 	  .style("font-size", "16px")
     plot.append('rect')
     .attr('x',0)
@@ -347,7 +348,7 @@ function heatmapImpl() {
     var dataset = strsplit(names[0],'-',2)
     for(var j=0; j<names.length; j++) {
 		  plot.append('a')
-		  .attr('xlink:href',"http://epigenomegateway.wustl.edu/browser/?genome=hg19&datahub="+jsonUrl)
+		  .attr('xlink:href',"http://epigenomegateway.wustl.edu/browser/?genome=hg19&datahub="+jsonUrl+"&coordinate="+d.chr+":"+start+"-"+end)
 		  .attr('target',"_blank")
 		  .append('text').attr('x',x+w)
 		  .attr('y',11+y)

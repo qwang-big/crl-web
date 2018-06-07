@@ -35,6 +35,7 @@
   </head>
   <body>
 
+	<img src="loading.gif" id="loading"/>
     <div id="chart" style="position:absolute;width:900px"></div>
     <div style="position:relative;left:900px;width:400px">
 <div id="lists"></div>
@@ -136,6 +137,7 @@ var tooltip = d3.select("#tooltip")
     .style("font-size", "16px")
 
 function drawMain(error,data,dpc,prcomp,markergene){
+	d3.select("#loading").style("display", "none")
 	eigenVec = prcomp
 	setPCs(dpc,500000)
 	setRank2(data)

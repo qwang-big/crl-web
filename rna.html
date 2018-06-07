@@ -34,7 +34,7 @@
     <script type="text/javascript" src="js/crl_utils.js"></script>
   </head>
   <body>
-
+	<img src="loading.gif" id="loading"/>
     <div id="chart" style="position:absolute;width:900px"></div>
     <div style="position:relative;left:900px;width:400px">
 <div id="lists"></div>
@@ -136,6 +136,7 @@ var tooltip = d3.select("#tooltip")
     .style("font-size", "16px")
 
 function drawMain(error,data,rna,dpc,prcomp,markergene){
+	d3.select("#loading").style("display", "none")
 	prom =[], rank =[]
 	eigenVec = prcomp
 	setPCs(dpc,500000);
