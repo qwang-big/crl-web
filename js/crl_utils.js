@@ -383,7 +383,8 @@ function tdfill(d, i) {
 	  .domain([settings.low, 0, settings.high])
 	  .range(["#00f", "#fff", "#f00"])
 	  .nice();
-	var str = '<td><a href="http://www.genecards.org/Search/Keyword?queryString='+strsplit(d.name,'_',1)+'" target="_blank">'+d.name+'</a></td><td>'+d.dist+'</td>'
+	var s = isEnh(d.name) ? 'http://www.genecards.org/Search/Keyword?queryString=' : 'browse.html?sample='+sample+'&gene=';
+	var str = '<td><a href="'+s+strsplit(d.name,'_',1)+'" target="_blank">'+d.name+'</a></td><td>'+d.dist+'</td>'
 	for(var j=1; j<=settings.pc; j++)
 		str += '<td style="background:'+colord(parseFloat(d["PC"+j]))+'">&nbsp;</td>'
 	return str
@@ -528,6 +529,10 @@ function getNetstr(d, i) {
 		str += d.nodes[j].name+"\r\n"
 	}
 	return str
+}
+
+function isEnh(x) {
+	return x.indexOf("_")==-1 && x.indexOf("GH")==0
 }
 
 function setRanks(data) {

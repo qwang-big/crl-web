@@ -48,8 +48,8 @@ A68927.CEMT_98.H3K27me3.hg19a.IX5128.CAVYBANXX_6_GAGTGG.q5.F1028.PET.wig.bw,2,4
 A68928.CEMT_98.H3K36me3.hg19a.IX5128.CAVYBANXX_6_CCGCAA.q5.F1028.PET.wig.bw,2,5
 A68929.CEMT_98.H3K27ac.hg19a.IX5130.CAVYBANXX_8_CCTTAG.q5.F1028.PET.wig.bw,2,6
 A68930.CEMT_98.Input.hg19a.IX5128.CAVYBANXX_6_CGAGAA.q5.F1028.PET.wig.bw,2,7
-A36012.3_lanes_dupsFlagged.q5.f0.5mC.CpG.fractional.bw,1,8
-A36014.3_lanes_dupsFlagged.q5.f0.5mC.CpG.fractional.bw,1,8
-A36016.3_lanes_dupsFlagged.q5.f0.5mC.CpG.fractional.bw,1,8
-A59695.CEMT_86.WGBS.merged.A59695_3_lanes_dupsFlagged.q5.5mC.CpG.fractional.bw,1,8
-A59696.CEMT_87.WGBS.merged.A59696_3_lanes_dupsFlagged.q5.5mC.CpG.fractional.bw,2,8
+A36012.3_lanes_dupsFlagged.q5.f0.5mC.CpG.fractional.bw,2,8
+A36014.3_lanes_dupsFlagged.q5.f0.5mC.CpG.fractional.bw,2,8
+A36016.3_lanes_dupsFlagged.q5.f0.5mC.CpG.fractional.bw,2,8
+A59695.CEMT_86.WGBS.merged.A59695_3_lanes_dupsFlagged.q5.5mC.CpG.fractional.bw,2,8
+A59696.CEMT_87.WGBS.merged.A59696_3_lanes_dupsFlagged.q5.5mC.CpG.fractional.bw,1,8
