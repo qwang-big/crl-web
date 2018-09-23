@@ -1,0 +1,242 @@
+name,source
+ARID1A,marker genes
+ATM,marker genes
+BCOR,marker genes
+BIRC3,marker genes
+BRAF,marker genes
+CHD2,marker genes
+CXCR4,marker genes
+DDX3X,marker genes
+EGR2,marker genes
+FBXW7,marker genes
+IRF4,marker genes
+MYD88,marker genes
+NOTCH1,marker genes
+PAX5,marker genes
+SAMHD1,marker genes
+SF3B1,marker genes
+SYK,marker genes
+TP53,marker genes
+XPO1,marker genes
+ZAP70,marker genes
+ATM,chronic lymphocytic leukemia (MalaCards)
+CCND1,chronic lymphocytic leukemia (MalaCards)
+CD38,chronic lymphocytic leukemia (MalaCards)
+CD5,chronic lymphocytic leukemia (MalaCards)
+TP53,chronic lymphocytic leukemia (MalaCards)
+ZAP70,chronic lymphocytic leukemia (MalaCards)
+ATM,richter's syndrome (MalaCards)
+CD38,richter's syndrome (MalaCards)
+CD5,richter's syndrome (MalaCards)
+TP53,richter's syndrome (MalaCards)
+CD38,acute myeloid leukemia (MalaCards)
+CD5,acute myeloid leukemia (MalaCards)
+HRAS,acute myeloid leukemia (MalaCards)
+TP53,acute myeloid leukemia (MalaCards)
+BCL11A,CLL (COSMIC)
+BCL2,CLL (COSMIC)
+BCL3,CLL (COSMIC)
+BCL6,CLL (COSMIC)
+BIRC3,CLL (COSMIC)
+BTG1,CLL (COSMIC)
+BTK,CLL (COSMIC)
+CCND1,CLL (COSMIC)
+CCND2,CLL (COSMIC)
+CHD2,CLL (COSMIC)
+CHST11,CLL (COSMIC)
+DDX3X,CLL (COSMIC)
+FAT1,CLL (COSMIC)
+FSTL3,CLL (COSMIC)
+IGH,CLL (COSMIC)
+LRP1B,CLL (COSMIC)
+MAPK1,CLL (COSMIC)
+MYC,CLL (COSMIC)
+NFKBIE,CLL (COSMIC)
+POT1,CLL (COSMIC)
+SRSF2,CLL (COSMIC)
+TCL1A,CLL (COSMIC)
+U2AF1,CLL (COSMIC)
+XPO1,CLL (COSMIC)
+ZRSR2,CLL (COSMIC)
+SF3B1,CLL (Intogen)
+TP53,CLL (Intogen)
+MYD88,CLL (Intogen)
+ATM,CLL (Intogen)
+NOTCH1,CLL (Intogen)
+XPO1,CLL (Intogen)
+ARID1A,CLL (Intogen)
+CREBBP,CLL (Intogen)
+MED12,CLL (Intogen)
+KRAS,CLL (Intogen)
+MLL3,CLL (Intogen)
+KDM6A,CLL (Intogen)
+PLCB1,CLL (Intogen)
+ANK3,CLL (Intogen)
+NCOR1,CLL (Intogen)
+BCOR,CLL (Intogen)
+EP300,CLL (Intogen)
+DDX3X,CLL (Intogen)
+NRAS,CLL (Intogen)
+IRF2,CLL (Intogen)
+NF1,CLL (Intogen)
+FBXW7,CLL (Intogen)
+EGFR,CLL (Intogen)
+MLL2,CLL (Intogen)
+CNOT3,CLL (Intogen)
+MTOR,CLL (Intogen)
+ABL1,oncogenes
+MECOM,oncogenes
+MYC,oncogenes
+ABL2,oncogenes
+EWSR1,oncogenes
+MYCL,oncogenes
+AKT1,oncogenes
+FEV,oncogenes
+MYCN,oncogenes
+AKT2,oncogenes
+FGFR1,oncogenes
+NCOA4,oncogenes
+ATF1,oncogenes
+FGFR1OP,oncogenes
+NFKB2,oncogenes
+BCL11A,oncogenes
+FGFR2,oncogenes
+NRAS,oncogenes
+BCL2,oncogenes
+FUS,oncogenes
+NTRK1,oncogenes
+BCL3,oncogenes
+GOLGA5,oncogenes
+NUP214,oncogenes
+BCL6,oncogenes
+GOPC,oncogenes
+PAX8,oncogenes
+BCR,oncogenes
+HMGA1,oncogenes
+PDGFB,oncogenes
+BRAF,oncogenes
+HMGA2,oncogenes
+PIK3CA,oncogenes
+CARD11,oncogenes
+HRAS,oncogenes
+PIM1,oncogenes
+CBLB,oncogenes
+IRF4,oncogenes
+PLAG1,oncogenes
+CBLC,oncogenes
+JUN,oncogenes
+PPARG,oncogenes
+CCND1,oncogenes
+KIT,oncogenes
+PTPN11,oncogenes
+CCND2,oncogenes
+KRAS,oncogenes
+RAF1,oncogenes
+CCND3,oncogenes
+LCK,oncogenes
+REL,oncogenes
+CDX2,oncogenes
+LMO2,oncogenes
+RET,oncogenes
+CTNNB1,oncogenes
+MAF,oncogenes
+ROS1,oncogenes
+DDB2,oncogenes
+MAFB,oncogenes
+SMO,oncogenes
+DDIT3,oncogenes
+MAML2,oncogenes
+SS18,oncogenes
+DDX6,oncogenes
+MDM2,oncogenes
+TCL1A,oncogenes
+DEK,oncogenes
+MET,oncogenes
+TET2,oncogenes
+EGFR,oncogenes
+MITF,oncogenes
+TFG,oncogenes
+ELK4,oncogenes
+KMT2A,oncogenes
+TLX1,oncogenes
+ERBB2,oncogenes
+MPL,oncogenes
+TPR,oncogenes
+ETV4,oncogenes
+MYB,oncogenes
+USP6,oncogenes
+ETV6,oncogenes
+APC,suppressors
+IL2,suppressors
+TNFAIP3,suppressors
+ARHGEF12,suppressors
+JAK2,suppressors
+TP53,suppressors
+ATM,suppressors
+MAP2K4,suppressors
+TSC1,suppressors
+BCL11B,suppressors
+MDM4,suppressors
+TSC2,suppressors
+BLM,suppressors
+MEN1,suppressors
+VHL,suppressors
+BMPR1A,suppressors
+MLH1,suppressors
+WRN,suppressors
+BRCA1,suppressors
+MSH2,suppressors
+WT1,suppressors
+BRCA2,suppressors
+NF1,suppressors
+CARS,suppressors
+NF2,suppressors
+CBFA2T3,suppressors
+NOTCH1,suppressors
+CDH1,suppressors
+NPM1,suppressors
+CDH11,suppressors
+NR4A3,suppressors
+CDK6,suppressors
+NUP98,suppressors
+CDKN2C,suppressors
+PALB2,suppressors
+CEBPA,suppressors
+PML,suppressors
+CHEK2,suppressors
+PTEN,suppressors
+CREB1,suppressors
+RB1,suppressors
+CREBBP,suppressors
+RUNX1,suppressors
+CYLD,suppressors
+SDHB,suppressors
+DDX5,suppressors
+SDHD,suppressors
+EXT1,suppressors
+SMARCA4,suppressors
+EXT2,suppressors
+SMARCB1,suppressors
+FBXW7,suppressors
+SOCS1,suppressors
+FH,suppressors
+STK11,suppressors
+FLT3,suppressors
+SUFU,suppressors
+FOXP1,suppressors
+SUZ12,suppressors
+GPC3,suppressors
+SYK,suppressors
+IDH1,suppressors
+TCF3,suppressors
+C1orf43,housekeeping genes
+CHMP2A,housekeeping genes
+EMC7,housekeeping genes
+GPI,housekeeping genes
+PSMB2,housekeeping genes
+PSMB4,housekeeping genes
+RAB7A,housekeeping genes
+REEP5,housekeeping genes
+SNRPD3,housekeeping genes
+VCP,housekeeping genes
+VPS29,housekeeping genes

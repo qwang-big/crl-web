@@ -1,0 +1,276 @@
+name,source
+BCL2	follicular lymphoma  (MalaCards)
+BCL6	follicular lymphoma  (MalaCards)
+CCND1	follicular lymphoma  (MalaCards)
+IGH	follicular lymphoma  (MalaCards)
+MCL1	follicular lymphoma  (MalaCards)
+MME	follicular lymphoma  (MalaCards)
+ATM	lymphoma  (MalaCards)
+BCL2	lymphoma  (MalaCards)
+BCL6	lymphoma  (MalaCards)
+CCND1	lymphoma  (MalaCards)
+EZH2	lymphoma  (MalaCards)
+GAS5	lymphoma  (MalaCards)
+ATM	prolymphocytic leukemia  (MalaCards)
+CCND1	prolymphocytic leukemia  (MalaCards)
+CD5	prolymphocytic leukemia  (MalaCards)
+MYC	prolymphocytic leukemia  (MalaCards)
+BCL6	composite lymphoma  (MalaCards)
+CD5	composite lymphoma  (MalaCards)
+SOX11	composite lymphoma  (MalaCards)
+BCL2	marginal zone b-cell lymphoma  (MalaCards)
+BCL6	marginal zone b-cell lymphoma  (MalaCards)
+CD5	marginal zone b-cell lymphoma  (MalaCards)
+MME	marginal zone b-cell lymphoma  (MalaCards)
+CD5	b cell prolymphocytic leukemia  (MalaCards)
+MYC	b cell prolymphocytic leukemia  (MalaCards)
+TP53	b cell prolymphocytic leukemia  (MalaCards)
+BCL2	follicular lymphoma 1  (MalaCards)
+BCL6	follicular lymphoma 1  (MalaCards)
+IGH	follicular lymphoma 1  (MalaCards)
+ATM	cll/sll  (MalaCards)
+CCND1	cll/sll  (MalaCards)
+CD5	cll/sll  (MalaCards)
+MME	cll/sll  (MalaCards)
+SOX11	cll/sll  (MalaCards)
+TP53	cll/sll  (MalaCards)
+BCL6	peripheral t-cell lymphoma  (MalaCards)
+CD5	peripheral t-cell lymphoma  (MalaCards)
+MME	peripheral t-cell lymphoma  (MalaCards)
+TP53	peripheral t-cell lymphoma  (MalaCards)
+BCL6	diffuse large b-cell lymphoma  (MalaCards)
+CD5	diffuse large b-cell lymphoma  (MalaCards)
+EZH2	diffuse large b-cell lymphoma  (MalaCards)
+MDM2	diffuse large b-cell lymphoma  (MalaCards)
+MME	diffuse large b-cell lymphoma  (MalaCards)
+MYC	diffuse large b-cell lymphoma  (MalaCards)
+ATM	leukemia, chronic lymphocytic  (MalaCards)
+BCL2	leukemia, chronic lymphocytic  (MalaCards)
+BCL6	leukemia, chronic lymphocytic  (MalaCards)
+CCND1	leukemia, chronic lymphocytic  (MalaCards)
+CCND2	leukemia, chronic lymphocytic  (MalaCards)
+CD5	leukemia, chronic lymphocytic  (MalaCards)
+BCL6	lymphoblastic lymphoma  (MalaCards)
+CD5	lymphoblastic lymphoma  (MalaCards)
+MME	lymphoblastic lymphoma  (MalaCards)
+BCL2	lymphoma, mucosa-associated lymphoid type  (MalaCards)
+BCL6	lymphoma, mucosa-associated lymphoid type  (MalaCards)
+CCND1	lymphoma, mucosa-associated lymphoid type  (MalaCards)
+CD5	lymphoma, mucosa-associated lymphoid type  (MalaCards)
+IGH	lymphoma, mucosa-associated lymphoid type  (MalaCards)
+MME	lymphoma, mucosa-associated lymphoid type  (MalaCards)
+CCND1	retinoblastoma  (MalaCards)
+MALAT1	retinoblastoma  (MalaCards)
+MDM2	retinoblastoma  (MalaCards)
+TP53	retinoblastoma  (MalaCards)
+CCND1	pancreas adenocarcinoma  (MalaCards)
+MYC	pancreas adenocarcinoma  (MalaCards)
+TP53	pancreas adenocarcinoma  (MalaCards)
+EZH2	leukemia, acute myeloid  (MalaCards)
+MALAT1	leukemia, acute myeloid  (MalaCards)
+MCL1	leukemia, acute myeloid  (MalaCards)
+MME	leukemia, acute myeloid  (MalaCards)
+MYC	leukemia, acute myeloid  (MalaCards)
+TP53	leukemia, acute myeloid  (MalaCards)
+ATM	lymphoma, non-hodgkin, familial  (MalaCards)
+BCL2	lymphoma, non-hodgkin, familial  (MalaCards)
+BCL6	lymphoma, non-hodgkin, familial  (MalaCards)
+CCND1	lymphoma, non-hodgkin, familial  (MalaCards)
+CCND2	lymphoma, non-hodgkin, familial  (MalaCards)
+CD5	lymphoma, non-hodgkin, familial  (MalaCards)
+CCND1	myeloma, multiple  (MalaCards)
+CCND2	myeloma, multiple  (MalaCards)
+GAS5	myeloma, multiple  (MalaCards)
+MALAT1	myeloma, multiple  (MalaCards)
+MCL1	myeloma, multiple  (MalaCards)
+MYC	myeloma, multiple  (MalaCards)
+CCND1	lung cancer susceptibility 3  (MalaCards)
+GAS5	lung cancer susceptibility 3  (MalaCards)
+MALAT1	lung cancer susceptibility 3  (MalaCards)
+TP53	lung cancer susceptibility 3  (MalaCards)
+CCND1	bladder cancer  (MalaCards)
+EZH2	bladder cancer  (MalaCards)
+GAS5	bladder cancer  (MalaCards)
+MALAT1	bladder cancer  (MalaCards)
+MDM2	bladder cancer  (MalaCards)
+MYC	bladder cancer  (MalaCards)
+BCL2	b-cell lymphomas  (MalaCards)
+BCL6	b-cell lymphomas  (MalaCards)
+BTK	b-cell lymphomas  (MalaCards)
+CCND1	b-cell lymphomas  (MalaCards)
+CCND2	b-cell lymphomas  (MalaCards)
+CD5	b-cell lymphomas  (MalaCards)
+ATM	colorectal cancer  (MalaCards)
+BCL2	colorectal cancer  (MalaCards)
+CCND1	colorectal cancer  (MalaCards)
+CCND2	colorectal cancer  (MalaCards)
+GAS5	colorectal cancer  (MalaCards)
+MALAT1	colorectal cancer  (MalaCards)
+ATM	breast cancer  (MalaCards)
+BCL2	breast cancer  (MalaCards)
+CCND1	breast cancer  (MalaCards)
+CCND2	breast cancer  (MalaCards)
+EZH2	breast cancer  (MalaCards)
+GAS5	breast cancer  (MalaCards)
+BCL2	prostate cancer  (MalaCards)
+CCND1	prostate cancer  (MalaCards)
+EZH2	prostate cancer  (MalaCards)
+GAS5	prostate cancer  (MalaCards)
+MALAT1	prostate cancer  (MalaCards)
+MCL1	prostate cancer  (MalaCards)
+ABL1,oncogenes
+MECOM,oncogenes
+MYC,oncogenes
+ABL2,oncogenes
+EWSR1,oncogenes
+MYCL,oncogenes
+AKT1,oncogenes
+FEV,oncogenes
+MYCN,oncogenes
+AKT2,oncogenes
+FGFR1,oncogenes
+NCOA4,oncogenes
+ATF1,oncogenes
+FGFR1OP,oncogenes
+NFKB2,oncogenes
+BCL11A,oncogenes
+FGFR2,oncogenes
+NRAS,oncogenes
+BCL2,oncogenes
+FUS,oncogenes
+NTRK1,oncogenes
+BCL3,oncogenes
+GOLGA5,oncogenes
+NUP214,oncogenes
+BCL6,oncogenes
+GOPC,oncogenes
+PAX8,oncogenes
+BCR,oncogenes
+HMGA1,oncogenes
+PDGFB,oncogenes
+BRAF,oncogenes
+HMGA2,oncogenes
+PIK3CA,oncogenes
+CARD11,oncogenes
+HRAS,oncogenes
+PIM1,oncogenes
+CBLB,oncogenes
+IRF4,oncogenes
+PLAG1,oncogenes
+CBLC,oncogenes
+JUN,oncogenes
+PPARG,oncogenes
+CCND1,oncogenes
+KIT,oncogenes
+PTPN11,oncogenes
+CCND2,oncogenes
+KRAS,oncogenes
+RAF1,oncogenes
+CCND3,oncogenes
+LCK,oncogenes
+REL,oncogenes
+CDX2,oncogenes
+LMO2,oncogenes
+RET,oncogenes
+CTNNB1,oncogenes
+MAF,oncogenes
+ROS1,oncogenes
+DDB2,oncogenes
+MAFB,oncogenes
+SMO,oncogenes
+DDIT3,oncogenes
+MAML2,oncogenes
+SS18,oncogenes
+DDX6,oncogenes
+MDM2,oncogenes
+TCL1A,oncogenes
+DEK,oncogenes
+MET,oncogenes
+TET2,oncogenes
+EGFR,oncogenes
+MITF,oncogenes
+TFG,oncogenes
+ELK4,oncogenes
+KMT2A,oncogenes
+TLX1,oncogenes
+ERBB2,oncogenes
+MPL,oncogenes
+TPR,oncogenes
+ETV4,oncogenes
+MYB,oncogenes
+USP6,oncogenes
+ETV6,oncogenes
+APC,suppressors
+IL2,suppressors
+TNFAIP3,suppressors
+ARHGEF12,suppressors
+JAK2,suppressors
+TP53,suppressors
+ATM,suppressors
+MAP2K4,suppressors
+TSC1,suppressors
+BCL11B,suppressors
+MDM4,suppressors
+TSC2,suppressors
+BLM,suppressors
+MEN1,suppressors
+VHL,suppressors
+BMPR1A,suppressors
+MLH1,suppressors
+WRN,suppressors
+BRCA1,suppressors
+MSH2,suppressors
+WT1,suppressors
+BRCA2,suppressors
+NF1,suppressors
+CARS,suppressors
+NF2,suppressors
+CBFA2T3,suppressors
+NOTCH1,suppressors
+CDH1,suppressors
+NPM1,suppressors
+CDH11,suppressors
+NR4A3,suppressors
+CDK6,suppressors
+NUP98,suppressors
+CDKN2C,suppressors
+PALB2,suppressors
+CEBPA,suppressors
+PML,suppressors
+CHEK2,suppressors
+PTEN,suppressors
+CREB1,suppressors
+RB1,suppressors
+CREBBP,suppressors
+RUNX1,suppressors
+CYLD,suppressors
+SDHB,suppressors
+DDX5,suppressors
+SDHD,suppressors
+EXT1,suppressors
+SMARCA4,suppressors
+EXT2,suppressors
+SMARCB1,suppressors
+FBXW7,suppressors
+SOCS1,suppressors
+FH,suppressors
+STK11,suppressors
+FLT3,suppressors
+SUFU,suppressors
+FOXP1,suppressors
+SUZ12,suppressors
+GPC3,suppressors
+SYK,suppressors
+IDH1,suppressors
+TCF3,suppressors
+C1orf43,housekeeping genes
+CHMP2A,housekeeping genes
+EMC7,housekeeping genes
+GPI,housekeeping genes
+PSMB2,housekeeping genes
+PSMB4,housekeeping genes
+RAB7A,housekeeping genes
+REEP5,housekeeping genes
+SNRPD3,housekeeping genes
+VCP,housekeeping genes
+VPS29,housekeeping genes
