@@ -144,6 +144,7 @@ function heatmap(d) {
   curMap = d
   curMap.s = Math.max(0,d.id-200)
   curMap.e = d.id+200
+  d3.select("head").select('title').text(d.name)
   heatmapImpl()
 }
 
@@ -227,6 +228,10 @@ function getIntEnh(genename, ti) {
 	return res
 }
 
+function redirecturl(id) {
+	return isEnh(id) ? 'redirect.html?ghid='+id : "http://www.genecards.org/Search/Keyword?queryString="+id
+}
+
 function heatmapImpl() {
 	  var d = curMap
 	  var root = d3.select("#heatmap")
@@ -265,12 +270,24 @@ function heatmapImpl() {
     //.style("fill-opacity",0)
     //.style('stroke-width', 0.3)
     //.style('stroke', '#000')
+	  for(var i=s; i<e; i++) {
+			if (i in TAD)
+	      plot.append('a')
+        .append('rect')
+	      .attr('x',x)
+	      .attr('y',h)
+	      .attr('width',w)
+	      .attr('height',h)
+	      .attr('fill', TAD[i]%2==0 ? '#fc0' : '#e0f' )
+			x += w
+		}
+		x = 0
     color2= d3.scale.linear().domain(getscales(data, s, e)).range(["#BEBEBE", "#FFFFFF", "#FF0000"]).nice()
 	  for(var i=s; i<e; i++) {
       y = h
 			if (i in data){
 	      plot.append('a')
-		    .attr('xlink:href',"http://www.genecards.org/Search/Keyword?queryString="+strsplit(ids[i],'_',1))
+		    .attr('xlink:href',redirecturl(strsplit(ids[i],'_',1)))
 		    .attr('target',"_blank")
         .append('rect')
         .datum(i)
@@ -383,7 +400,7 @@ function tdfill(d, i) {
 	  .domain([settings.low, 0, settings.high])
 	  .range(["#00f", "#fff", "#f00"])
 	  .nice();
-	var s = isEnh(d.name) ? 'http://www.genecards.org/Search/Keyword?queryString=' : 'browse.html?sample='+sample+'&gene=';
+	var s = isEnh(d.name) ? 'redirect.html?ghid=' : 'browse.html?sample='+sample+'&gene=';
 	var str = '<td><a href="'+s+strsplit(d.name,'_',1)+'" target="_blank">'+d.name+'</a></td><td>'+d.dist+'</td>'
 	for(var j=1; j<=settings.pc; j++)
 		str += '<td style="background:'+colord(parseFloat(d["PC"+j]))+'">&nbsp;</td>'

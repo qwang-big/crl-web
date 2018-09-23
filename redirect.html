@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+<style>
+path { 
+    stroke-width: 3;
+    fill: none;
+    opacity: .7;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 2;
+    shape-rendering: crispEdges;
+    opacity: 1;
+}
+
+.d3-tip {
+    font-family: Verdana;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 8px;
+    color: #fff; 
+    z-index: 5070;
+  }
+
+</style>
+<script type="text/javascript" src="js/d3.min.js"></script>
+<script type="text/javascript" src="js/queue.v1.min.js"></script>
+<script type="text/javascript" src="js/crl_utils.js"></script>
+</head>
+<body>
+
+<img src="loading.gif" id="loading"/>
+<div id="msg" style="position:absolute"> </div>
+
+<script>
+var params=getParameterMap()
+
+function main(error, data) {
+	d3.select("#loading").style("display", "none")
+  id = ("ghid" in params)?params["ghid"]:"", id2 = ""
+  for (var i in data) {
+    if (data[i].oldId == id) id2 = data[i].newId
+  }
+  url= "http://www.genecards.org/Search/Keyword?queryString="
+  d3.select("#msg").text(id+" has been replaced by new GeneHancer ID:"+id2+", redirecting in 3 seconds ...")
+}
+
+queue()
+	.defer(d3.csv, "enhMap.csv")
+	.await(main);
+
+</script>
+</body>

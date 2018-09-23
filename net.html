@@ -108,7 +108,7 @@ var col2 = ["#0000FF","#1A1AFF","#3333FF","#4D4DFF","#6666FF","#8080FF","#9999FF
 "#B3B3FF","#CCCCFF","#E6E6FF","#FFFFFF","#FFE6E6","#FFCCCC","#FFB3B3",
 "#FF9999","#FF8080","#FF6666","#FF4D4D","#FF3333","#FF1A1A","#FF0000"]
 
-var rank, dPCs=[], eigenVec=[], pathways = [], circles = [], settings = {low:0, high:0, nrank:17888}, params=getParameterMap(), sample = params['sample']
+var rank, dPCs=[], eigenVec=[], pathways = [], circles = [], settings = {low:0, high:0, nrank:17888}, params=getParameterMap(), sample = params['sample'], ref = ("ref" in params)?"-"+params["ref"]:""
 
 // gd3 subnetwork function
 function subnetwork(params) {
@@ -263,7 +263,7 @@ function subnetwork(params) {
 		  .attr("d", d3.svg.symbol()
 		    .type(function(d) { return d3.svg.symbolTypes[3];  })
 		    .size(function(d) { return nodeRadius*nodeRadius*4 }))
-		  .attr('fill', function(d) { return color(rank[d.name].rank); })
+		  .attr('fill', function(d) {console.log(d.name); return color(rank[d.name].rank); })
 		  .style('stroke-width', strokeWidth)
 		  //.style('opacity', function(d) {return fillopacity(d, params.index);})
 		  .style('stroke', function(d) {
@@ -504,9 +504,9 @@ function drawMain(error, json, dpc, pathway, prcomp, rankdata) {
 }
 
 queue()
-	.defer(d3.json, sample+'nets.json')
+	.defer(d3.json, sample+'nets'+ref+'.json')
 	.defer(d3.csv, sample+'seq.csv')
-	.defer(d3.json, sample+'pathways.json')
+	.defer(d3.json, sample+'pathways'+ref+'.json')
 	.defer(d3.csv, sample+'comp.csv')
 	.defer(d3.csv, sample+'rank.csv')
 	.await(drawMain);

@@ -9,7 +9,7 @@
     <script type="text/javascript" src="js/crl_utils.js"></script>
 
 <script>
-    var curMap, scale=1, names = [], ids = [], data = [], dPC = [], genes = [], inta=[], intc, params=getParameterMap();
+    var curMap, scale=1, names = [], ids = [], data = [], TAD = [], dPC = [], genes = [], inta=[], intc, params=getParameterMap();
 var sample = params['sample']
 var code = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 var cols = ["#BEBEBE","#C0C0C0","#C2C2C2","#C5C5C5","#C7C7C7","#C9C9C9","#CBCBCB",
@@ -26,7 +26,7 @@ var col2 = ["#0000FF","#1A1AFF","#3333FF","#4D4DFF","#6666FF","#8080FF","#9999FF
 "#FF9999","#FF8080","#FF6666","#FF4D4D","#FF3333","#FF1A1A","#FF0000"]
 var jsonUrl = "https://raw.githubusercontent.com/qwang-big/crl-data/master/json/"+sample+".json"
 
-    function drawMain(error, name, seq, int, intj) {
+    function drawMain(error, name, seq, tad, int, intj) {
 	d3.select("#loading").style("display", "none")
       intc = intj
       intc.sel = intc.DefaultType
@@ -42,6 +42,10 @@ var jsonUrl = "https://raw.githubusercontent.com/qwang-big/crl-data/master/json/
 						geneName = seq[i].name.substr(0,seq[i].name.indexOf('_'))
 						genes.push({name:geneName, chr:seq[i].seqnames, start:parseInt(seq[i].start), end:parseInt(seq[i].end), id:id})
 					}
+			}
+			for (var i in tad) {
+      	for(var j=tad[i].id; j<tad[i].id2; j++)
+					TAD[j] = parseInt(i)
 			}
       for(var i=0; i<intj.Prom.length; i++) {
         inta[intj.Prom[i]] = []
@@ -78,7 +82,6 @@ var jsonUrl = "https://raw.githubusercontent.com/qwang-big/crl-data/master/json/
     }
     //Call back for when user selects an option
     function onSelect(d) {
-        d3.select("head").select('title').text(d.name)
         heatmap(d)
     }
 
@@ -97,6 +100,7 @@ var jsonUrl = "https://raw.githubusercontent.com/qwang-big/crl-data/master/json/
 queue()
 	.defer(d3.csv, sample+'name.csv')
 	.defer(d3.csv, sample+"seq.csv")
+	.defer(d3.csv, "tad.csv")
 	.defer(d3.csv, (("int" in params)?params["int"]:sample)+"int.csv")
 	.defer(d3.json,(("int" in params)?params["int"]:sample)+"int.json")
 	.await(drawMain);
