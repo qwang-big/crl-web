@@ -1,16 +1,16 @@
 name,source
-ETV6	leukemia, acute lymphoblastic 3  (MalaCards)
-FLT3	leukemia, acute lymphoblastic 3  (MalaCards)
-PAX5	leukemia, acute lymphoblastic 3  (MalaCards)
-ETV6	acute leukemia  (MalaCards)
-FLT3	acute leukemia  (MalaCards)
-PAX5	acute leukemia  (MalaCards)
-ETV6	leukemia, acute myeloid  (MalaCards)
-FLT3	leukemia, acute myeloid  (MalaCards)
-MIR155	leukemia, acute myeloid  (MalaCards)
-MIR199B	leukemia, acute myeloid  (MalaCards)
-MIR21	leukemia, acute myeloid  (MalaCards)
-MIR210	leukemia, acute myeloid  (MalaCards)
+ETV6,acute lymphoblastic 3 leukemia (MalaCards)
+FLT3,acute lymphoblastic 3 leukemia (MalaCards)
+PAX5,acute lymphoblastic 3 leukemia (MalaCards)
+ETV6,acute leukemia (MalaCards)
+FLT3,acute leukemia (MalaCards)
+PAX5,acute leukemia (MalaCards)
+ETV6,acute myeloid leukemia (MalaCards)
+FLT3,acute myeloid leukemia (MalaCards)
+MIR155,acute myeloid leukemia (MalaCards)
+MIR199B,acute myeloid leukemia (MalaCards)
+MIR21,acute myeloid leukemia (MalaCards)
+MIR210,acute myeloid leukemia (MalaCards)
 ABL1,oncogenes
 MECOM,oncogenes
 MYC,oncogenes
