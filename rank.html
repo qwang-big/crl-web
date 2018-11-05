@@ -31,15 +31,17 @@
     </style>
     <script type="text/javascript" src="js/d3.min.js"></script>
     <script type="text/javascript" src="js/queue.v1.min.js"></script>
+    <script type="text/javascript" src="js/d3.autocomplete.js"></script>
     <script type="text/javascript" src="js/crl_utils.js"></script>
   </head>
   <body>
 
-	<img src="loading.gif" id="loading"/>
-    <div id="chart" style="position:absolute;width:900px"></div>
+	<img src="loading.gif" id="loading" style="margin: auto; display: block"/>
+    <div id="chart" style="position:absolute;width:900px;display:none"></div>
     <div style="position:relative;left:900px;width:400px">
 <div id="lists"></div>
 <div id="info0"></div>
+<div id="geneprompt"></div>
 </div>
 
 <div id="tooltip" style="position:absolute; z-index:10; visibility:hidden; font-size:16px; background-color:#fff"></div>
@@ -143,6 +145,25 @@ function drawMain(error,data,dpc,prcomp,markergene){
 	setRank2(data)
 	plotPt(rank);
 	makelist(markergene)
+	d3.select("#chart").style("display", "block")
+	setAutocomplete()
+}
+
+//Call back for when user selects an option
+function onSelect(d) {
+	highlightgene(d)
+}
+
+//Setup and render the autocomplete
+function setAutocomplete() {
+	var mc = autocomplete(document.getElementById('geneprompt'))
+        .keys(rank)
+        .dataField("name")
+        .placeHolder("Type gene name here")
+        .width(100)
+        .margin({top: 10, left: 10+width})
+        .onSelected(onSelect)
+        .render();
 }
 
 queue()

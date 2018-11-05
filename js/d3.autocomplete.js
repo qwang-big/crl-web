@@ -39,7 +39,7 @@ function autocomplete(parent) {
         _currentIndex,
         _keys,
         _selectedFunction=defaultSelected;
-        _minLength = 1,
+        _minLength = 2,
         _dataField = "dataField",
         _labelField = "labelField";
 
@@ -61,7 +61,11 @@ function autocomplete(parent) {
                     .attr("style","bp-autocomplete-holder");
 
             container.attr("width", __width)
-                .attr("height", __height);
+                .attr("height", __height)
+                .style("margin-left", _margin.left+"px")
+                .style("margin-top", _margin.top+"px")
+                //.style("margin-right", _margin.right+"px")
+                //.style("margin-bottom", _margin.bottom+"px");
 
             var input = enter.append("input")
                         .attr("class", "form-control")
@@ -148,7 +152,7 @@ function autocomplete(parent) {
                     _matches = [];
                     for (var i = 0; i < _keys.length; i++) {
                         var match = false;
-                        match = match || (_keys[i][_dataField].toLowerCase().indexOf(str.toLowerCase()) >= 0);
+                        match = match || (_keys[i][_dataField].toLowerCase().indexOf(str.toLowerCase()) == 0);
                         if (match) {
                             _matches.push(_keys[i]);
                             //console.log("matches " + _keys[i][_dataField]);

@@ -9,7 +9,7 @@
     padding: 8px;
 }
 
-#rbl tr:nth-child(even){background-color: #f2f2f2;}
+#rbl tr:nth-child(even){background-color: #f3f3f3;}
 
 #rbl tr:hover {background-color: #ddd;}
 
@@ -17,6 +17,6 @@
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
-    background-color: #4CAF50;
-    color: white;
+    background-color: #CCC;
+    color: black;
 }

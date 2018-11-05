@@ -27,6 +27,30 @@ function highlight(i){
   plotPt(rank)
 }
 
+function highlightgene(data){
+  var bar = chart
+    .append("g")
+    .datum(data)
+    .attr("class", "bar")
+    .append("svg:rect")
+    .on('click', function(d,i) {showPtinfo(d.name)})
+    .attr("x", function(d) { return x(d.rank) })
+    .attr("y", function(d) {return y(d.rank2)})      
+    .attr("height", 9)
+    .attr("width", 9)
+    .attr("fill", "#f00")
+  .on("mouseover", function(d){
+	tooltip.html(d.name)
+	return tooltip.style("visibility", "visible");
+      })
+      .on("mousemove", function(){
+           return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px")
+      })
+      .on("mouseout", function(){
+           return tooltip.style("visibility", "hidden")
+      })
+}
+
 function showPtinfo(d){
 	var root = d3.select("#info0")
 	root.selectAll("*").remove();
@@ -278,7 +302,7 @@ function heatmapImpl() {
 	      .attr('y',h)
 	      .attr('width',w)
 	      .attr('height',h)
-	      .attr('fill', TAD[i]%2==0 ? '#fc0' : '#e0f' )
+	      .attr('fill', TAD[i]%2==0 ? '#fc0' : '#c0f' )
 			x += w
 		}
 		x = 0
