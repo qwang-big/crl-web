@@ -161,7 +161,7 @@ function rocChart(id, data, options) {
       .attr("x", 0 - height/1.56)  
       //.style("font-size","12px")              
       .style("text-anchor", "left")
-      .text("Recovery Rate");
+      .text("ECDF");
 
   yAxisG = svg.select("g.y.axis");
 

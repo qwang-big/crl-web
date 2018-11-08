@@ -466,12 +466,12 @@ function drawMain(error, json, dpc, pathway, prcomp, rankdata) {
 		      return pathways[i].genes[j].indexOf(d.name)>=0?"#f00":'#000'
 		    })
       })
-	    .style("width", "300px")
+	    .style("width", "450px")
       .selectAll('option')
       .data(i in pathways?pathways[i].pathways:["no enrichment"]).enter()
 	    .append("option")
 	    .attr("value", function(d, i){ return i})
-	    .text(function(d,j){ return d+" "+shortd(pathways[i].pvals[j])+" "+j})
+	    .text(function(d,j){ return d+" "+shortd(pathways[i].pvals[j])})
     sel.property("selectedIndex",pathways[i].sel)
 
 		div.append("span").style("margin-left", "5px")

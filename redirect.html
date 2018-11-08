@@ -45,7 +45,9 @@ function main(error, data) {
     if (data[i].oldId == id) id2 = data[i].newId
   }
   url= "http://www.genecards.org/Search/Keyword?queryString="
-  d3.select("#msg").text(id+" has been replaced by new GeneHancer ID:"+id2+", redirecting in 3 seconds ...")
+  if (id2 == "") {d3.select("#msg").text(id+" has been removed in the latest GeneHancer database")
+  } else {d3.select("#msg").text(id+" has been replaced by new GeneHancer ID:"+id2+", redirecting in 3 seconds ...");
+	window.setTimeout(function(){window.location.replace(url + id2)}, 3000);
 }
 
 queue()
