@@ -27,7 +27,7 @@ var col2 = ["#0000FF","#1A1AFF","#3333FF","#4D4DFF","#6666FF","#8080FF","#9999FF
 var jsonUrl = "https://raw.githubusercontent.com/qwang-big/irene-data/master/json/"+sample+".json"
 
     function drawMain(error, name, seq, tad, int, intj) {
-	d3.select("#loading").style("display", "none")
+			d3.select("#loading").style("display", "none")
       intc = intj
       intc.sel = intc.DefaultType
 			for (var i in name) {
@@ -69,6 +69,7 @@ var jsonUrl = "https://raw.githubusercontent.com/qwang-big/irene-data/master/jso
 	      .attr("value", function(d, i){ return i})
 	      .text(function(d){ return d})
       sel.property("selectedIndex",intc.DefaultType)
+			d3.select("#geneprompt").style("display", "block")
       setAutocomplete();
       setSelected();
     }
@@ -113,7 +114,7 @@ queue()
 <body>
 
 <img src="loading.gif" id="loading" style="margin: auto; display: block"/>
-<div id="geneprompt" style="width:100%; height:30px">
+<div id="geneprompt" style="width:100%; height:30px; display: none">
 <a href="javascript:void(0)" title="zoom in" onclick="return zoomIn()">+&nbsp;</a>
 <a href="javascript:void(0)" title="zoom out" onclick="return zoomOut()">&#8211;</a>
 <span id="legend"></span>
