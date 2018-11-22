@@ -263,7 +263,7 @@ function subnetwork(params) {
 		  .attr("d", d3.svg.symbol()
 		    .type(function(d) { return d3.svg.symbolTypes[3];  })
 		    .size(function(d) { return nodeRadius*nodeRadius*4 }))
-		  .attr('fill', function(d) {console.log(d.name); return color(rank[d.name].rank); })
+		  .attr('fill', function(d) {return color(rank[d.name].rank); })
 		  .style('stroke-width', strokeWidth)
 		  //.style('opacity', function(d) {return fillopacity(d, params.index);})
 		  .style('stroke', function(d) {
