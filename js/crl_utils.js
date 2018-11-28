@@ -306,7 +306,8 @@ function heatmapImpl() {
 			x += w
 		}
 		x = 0
-    color2= d3.scale.linear().domain(getscales(data, s, e)).range(["#BEBEBE", "#FFFFFF", "#FF0000"]).nice()
+		drange= getscales(data, s, e)
+    color2= d3.scale.linear().domain(drange).range(["#BEBEBE", "#FFFFFF", "#FF0000"]).nice()
 	  for(var i=s; i<e; i++) {
       y = h
 			if (i in data){
@@ -335,7 +336,7 @@ function heatmapImpl() {
 				y += h
 	      for(var j=0; j<data[i].length; j++) {
 		      plot.append('rect')
-      	  .datum(round2p(code.indexOf(data[i].charAt(j))/code.length))
+      	  .datum(round2p((code.indexOf(data[i].charAt(j))-drange[0])/(drange[2]-drange[0])))
 		      .attr('x',x)
 		      .attr('y',y)
 		      .attr('width',w)

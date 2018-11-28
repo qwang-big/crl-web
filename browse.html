@@ -80,6 +80,8 @@ var epggUrl = "http://epigenomegateway.wustl.edu/browser/?genome=hg19";
 
     function setSelected() {
         if (!("gene" in params)) return;
+			  if (jsonUrl != "")
+			  	d3.select("#dmore").style("visibility", "visible");
         for(var i in genes) {
             if (genes[i].name === params["gene"])
                 return heatmap(genes[i])

@@ -108,29 +108,32 @@ function tabulate2(id,data,columns) {
     })
 }
 
-var data=[{"Category":"Num of enhancers per gene"},{"Category":"Num of genes per enhancer"}], params=getParameterMap(), sample = params['sample']
-function drawMain(error,data0, meta) {
+var data=[{"Category":"Num of enhancers per gene"},{"Category":"Num of genes per enhancer"}];
+var params=getParameterMap(), sample = params['sample']
+
+d3.csv(sample+'meta.csv', function(error, meta) {
+	if (error != null) return;
+  tabulate2('#meta_tbl',meta,['file','group','dataset'])
+	d3.select('#sample').text(sample+' analysis statistics')
+  d3.select('#file3').text('Files used for analyses')
+})
+d3.csv(sample+'stat.csv', function(error, stat) {
+	if (error != null) return;
   var columns = ['Category','Min.','1st Qu.','Median','Mean','3rd Qu.','Max.']
-  for(var i=0; i<data0.length; i++) {
-    data[0][columns[i+1]] = data0[i].prom
-    data[1][columns[i+1]] = data0[i].enh
+  for(var i=0; i<stat.length; i++) {
+    data[0][columns[i+1]] = stat[i].prom
+    data[1][columns[i+1]] = stat[i].enh
   }
   tabulate('#stat_tbl',data,columns)
-  tabulate2('#meta_tbl',meta,['file','group','dataset'])
-  d3.select('#sample').text(sample+' analysis statistics')
-}
-
-queue()
-	.defer(d3.csv, sample+'stat.csv')
-	.defer(d3.csv, sample+'meta.csv')
-	.await(drawMain);
+	d3.select('#net3').text('Promoter-enhancer network properties')
+})
 </script>
 </head>
 <body>
 <h1 id="sample"></h1>
-<h3>Promoter-enhancer network properties</h3>
+<h3 id="net3"></h3>
 <table id="stat_tbl" class="table table-bordered table-striped table-hover table-list-search"></table>
-<h3>Files used for analyses</h3>
+<h3 id="file3"></h3>
 <table id="meta_tbl" class="table table-bordered table-striped table-hover table-list-search"></table>
 </body>
 </html>
