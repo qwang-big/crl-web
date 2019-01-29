@@ -88,7 +88,7 @@ function rochart(j) {
   rocChart("#roc", roc, rocChartOptions)
 }
 
-function drawMain(error, data, marker) {
+function drawMain(error, names, data, marker) {
 	d3.select("#loading").style("display", "none")
   var pdp=0, edp=0
   var j = 0
@@ -109,9 +109,11 @@ function drawMain(error, data, marker) {
   }
   rank = data
   rochart(0)
+	plotName(names)
 }
 
 queue()
+	.defer(d3.csv, sample+'name.csv')
 	.defer(d3.csv, sample+"rank.csv")
 	.defer(d3.csv, sample+"marker.csv")
 	.await(drawMain);

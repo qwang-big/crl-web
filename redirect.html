@@ -48,11 +48,21 @@ function main(error, data) {
   if (id2 == "") {d3.select("#msg").text(id+" has been removed in the latest GeneHancer database")
   } else {d3.select("#msg").text(id+" has been replaced by new GeneHancer ID:"+id2+", redirecting in 3 seconds ...");
 	window.setTimeout(function(){window.location.replace(url + id2)}, 3000);
+	}
 }
 
-queue()
-	.defer(d3.csv, "enhMap.csv")
-	.await(main);
+function shortone() {
+	d3.select("#loading").style("display", "none")
+  id = ("ghid" in params)?params["ghid"]:"", id2 = id.replace("I","J")
+  url= "http://www.genecards.org/Search/Keyword?queryString="
+  if (id2 == "") {d3.select("#msg").text(id+" has been removed in the latest GeneHancer database")
+  } else {d3.select("#msg").text(id+" has been replaced by new GeneHancer ID:"+id2+", redirecting in 3 seconds ...");
+	window.setTimeout(function(){window.location.replace(url + id2)}, 3000);
+	}
+}
+
+//queue().defer(d3.csv, "enhMap.csv").await(main);
+shortone()
 
 </script>
 </body>

@@ -322,7 +322,7 @@ function subnetwork(params) {
 						.style("fill-opacity", active ? 0.5 : 1);
 				});
 
-		netLegend.append("line")
+		/*netLegend.append("line")
 			.attr("x1", 0)
 			.attr("x2", netLegendBox)
 			.style("stroke-width", edgeWidth)
@@ -331,7 +331,47 @@ function subnetwork(params) {
 		netLegend.append("text")
 			.attr("x", 8 + netLegendBox)
 			.attr("y", 3)
-			.text(function(n){ return n; });
+			.text(function(n){ return n; });*/
+
+		netLegend.append("rect")
+			.attr("x", 0)
+			.attr("y", 0)
+			.style("width", 0.5 * netLegendBox)
+			.style("height", netLegendBox)
+			.style("fill", hot);
+
+		netLegend.append("rect")
+			.attr("x", 0)
+			.attr("y", 0)
+			.style("width", netLegendBox)
+			.style("height", netLegendBox)
+			.style("fill", "none")
+			.style("stroke", "#000");
+
+		netLegend.append("text")
+			.attr("x", 8 + netLegendBox)
+			.attr("y", 11)
+			.text("PromEnh");
+
+		netLegend.append("rect")
+			.attr("x", 0.5 * netLegendBox)
+			.attr("y", 20)
+			.style("width", 0.5 * netLegendBox)
+			.style("height", netLegendBox)
+			.style("fill", hot);
+
+		netLegend.append("rect")
+			.attr("x", 0)
+			.attr("y", 20)
+			.style("width", netLegendBox)
+			.style("height", netLegendBox)
+			.style("fill", "none")
+			.style("stroke", "#000");
+
+		netLegend.append("text")
+			.attr("x", 8 + netLegendBox)
+			.attr("y", 32)
+			.text("PromOnly");
 
 		netLegend.attr("transform", function(d, i){
 			return "translate(" + (width-d3.select(this).node().getBBox().width) + "," + ((i+1)*netLegendBox) + ")";
@@ -365,6 +405,9 @@ function subnetwork(params) {
 				  .attr('offset', '0%')
 				  .attr('style', 'stop-color:#fff;stop-opacity:1');
 				gradient.append('svg:stop')
+				  .attr('offset', '30%')
+				  .attr('style', 'stop-color:#fff;stop-opacity:1');
+				gradient.append('svg:stop')
 				  .attr('offset', '100%')
 				  .attr('style', 'stop-color:' + hot + ';stop-opacity:1');
 			  });
@@ -374,13 +417,18 @@ function subnetwork(params) {
 			.attr('height', heatLegendHeight)
 			.style('fill', 'url(#' + gradientID + ')');
 
+		gradient.append("text")
+			.attr("x", 0)
+			.attr("y", heatLegendHeight-8)
+			.text("Rankings:");
+			
 		var labels = heatLegend.append('div')
 			.style('clear', 'both');
 		var format = d3.format("g");
 		
 		heatLegend.append('span')
 		  .style('float', 'left')
-		  .text("10%")
+		  .text("100% . . . 10%")
 		  //.text(heatFormat(d3.min(heatRange)));
 
 		heatLegend.append('span')
@@ -441,7 +489,7 @@ function subnetwork(params) {
   return chart;
 }
 
-function drawMain(error, json, dpc, pathway, prcomp, rankdata) {
+function drawMain(error, json, names, dpc, pathway, prcomp, rankdata) {
 	d3.select("#loading").style("display", "none")
 	var fig = d3.select("#figures")
 	setPCs(dpc,500000)
@@ -500,11 +548,12 @@ function drawMain(error, json, dpc, pathway, prcomp, rankdata) {
 			.style("margin-bottom", "30px")
 	  	g.append("hr");
 	});
-
+	plotName(names)
 }
 
 queue()
 	.defer(d3.json, sample+'nets'+ref+'.json')
+	.defer(d3.csv, sample+'name.csv')
 	.defer(d3.csv, sample+'seq.csv')
 	.defer(d3.json, sample+'pathways'+ref+'.json')
 	.defer(d3.csv, sample+'comp.csv')

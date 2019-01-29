@@ -35,7 +35,7 @@
     <script type="text/javascript" src="js/crl_utils.js"></script>
   </head>
   <body>
-
+	<span id="title"></span>
 	<img src="loading.gif" id="loading" style="margin: auto; display: block"/>
     <div id="chart" style="position:absolute;width:900px;display:none"></div>
     <div style="position:relative;left:900px;width:400px">
@@ -138,7 +138,7 @@ var tooltip = d3.select("#tooltip")
     .text("Low significance <- - - - - - - - - - Promoter + Enhancer - - - - - - - - - -> High significance")
     .style("font-size", "16px")
 
-function drawMain(error,data,dpc,prcomp,markergene){
+function drawMain(error,data,names,dpc,prcomp,markergene){
 	d3.select("#loading").style("display", "none")
 	eigenVec = prcomp
 	setPCs(dpc,500000)
@@ -147,6 +147,7 @@ function drawMain(error,data,dpc,prcomp,markergene){
 	makelist(markergene)
 	d3.select("#chart").style("display", "block")
 	setAutocomplete()
+	plotName(names)
 }
 
 //Call back for when user selects an option
@@ -168,6 +169,7 @@ function setAutocomplete() {
 
 queue()
 	.defer(d3.csv, sample+'rank.csv')
+	.defer(d3.csv, sample+'name.csv')
 	.defer(d3.csv, sample+'seq.csv')
 	.defer(d3.csv, sample+'comp.csv')
 	.defer(d3.csv, sample+'marker.csv')

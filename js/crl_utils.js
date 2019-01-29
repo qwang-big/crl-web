@@ -70,7 +70,7 @@ function showPtinfo(d){
 	  .append("tr")
 	  .html(function(d,i) { return tdfill(d, i) })
 	legend2(col2, root.append("span")
-	  .style("white-space", "nowrap"))
+	  .style("white-space", "nowrap"),5,20)
 }
 
 function plotPt(data){
@@ -169,6 +169,7 @@ function heatmap(d) {
   curMap.s = Math.max(0,d.id-200)
   curMap.e = d.id+200
   d3.select("head").select('title').text(d.name)
+  d3.select("#gname").text(d.name)
   heatmapImpl()
 }
 
@@ -189,30 +190,30 @@ function getParameterMap () {
     return qmap;
 }
 
-function legend(cols, id, left, right) {
+function legend(cols, id, left, right, w, h) {
 	var panel = d3.select(id)
   	panel.selectAll("*").remove()
 	panel.append('span').text(left)
-	var svg = panel.append('svg').attr("width", 5*cols.length).attr("height", 20)
+	var svg = panel.append('svg').attr("width", w*cols.length).attr("height", h)
 	for(i in cols)
 	svg.append('rect')
-	.attr('x',5*i)
+	.attr('x',w*i)
 	.attr('y',0)
-	.attr('width',5)
-	.attr('height',20)
+	.attr('width',w)
+	.attr('height',h)
 	.attr('fill', cols[i] )
 	panel.append('span').text(right)
 }
 
-function legend2(cols, panel) {
+function legend2(cols, panel, w, h) {
 	panel.append('span').text(shortd(settings.low))
-	var svg = panel.append('svg').attr("width", 5*col2.length).attr("height", 20)
+	var svg = panel.append('svg').attr("width", w*col2.length).attr("height", h)
 	for(i in cols)
 	svg.append('rect')
-	.attr('x',5*i)
+	.attr('x',w*i)
 	.attr('y',0)
-	.attr('width',5)
-	.attr('height',20)
+	.attr('width',w)
+	.attr('height',h)
 	.attr('fill', col2[i] )
 	panel.append('span').text(shortd(settings.high))
 }
@@ -262,8 +263,8 @@ function heatmapImpl() {
 	  root.selectAll("*").remove()
     var tooltip = d3.select("#tooltip")
     color = d3.scale.linear().domain([d3.min(dPC),0,d3.max(dPC)]).range(["#00f", "#fff", "#f00"]).nice()
-	  legend(cols, "#legend", "Epigenome intensity percentage scale: 0%", "100%")
-	  legend(col2, "#legend2", "PC1: "+shortd(d3.min(dPC)), shortd(d3.max(dPC)))
+	  legend(cols, "#legend", "Epigenome intensity percentage scale: 0%", "100%", 1, 20)
+	  legend(col2, "#legend2", "PC1: "+shortd(d3.min(dPC)), shortd(d3.max(dPC)), 3, 20)
 	  var h=20, y=0, x=0, W=1500, H=h*names.length
 	  var s = parseInt(d.s)
 	  var e = parseInt(d.e)
@@ -334,6 +335,20 @@ function heatmapImpl() {
 	           return tooltip.style("visibility", "hidden")
 	      })
 				y += h
+				if (i == d.id)
+					plot.append('svg:path')
+					.attr('transform', function(d) { return 'translate(' + (x+w/2) + ',' + (h-5) + ')' })
+					.attr("d", d3.svg.symbol()
+					.type(function(d) { return d3.svg.symbolTypes[4] })
+					.size(function(d) { return 40 }))
+					.attr('fill', function(d) { return "#f00" })
+				else if (intc != undefined && getIntEnh(d.name,intc.sel).indexOf(ids[i])!=-1)
+					plot.append('svg:path')
+					.attr('transform', function(d) { return 'translate(' + (x+w/2) + ',' + (h-5) + ')' })
+					.attr("d", d3.svg.symbol()
+					.type(function(d) { return d3.svg.symbolTypes[4] })
+					.size(function(d) { return 40 }))
+					.attr('fill', function(d) { return "#A020F0" })
 	      for(var j=0; j<data[i].length; j++) {
 		      plot.append('rect')
       	  .datum(round2p((code.indexOf(data[i].charAt(j))-drange[0])/(drange[2]-drange[0])))
@@ -352,20 +367,6 @@ function heatmapImpl() {
 			    .on("mouseout", function(){
 			         return tooltip.style("visibility", "hidden")
 			    })
-					if (i == d.id)
-						plot.append('svg:path')
-					  .attr('transform', function(d) { return 'translate(' + (x+w/2) + ',' + (h-5) + ')' })
-						.attr("d", d3.svg.symbol()
-						.type(function(d) { return d3.svg.symbolTypes[4] })
-						.size(function(d) { return 40 }))
-						.attr('fill', function(d) { return "#f00" })
-					else if (intc != undefined && getIntEnh(d.name,intc.sel).indexOf(ids[i])!=-1)
-						plot.append('svg:path')
-					  .attr('transform', function(d) { return 'translate(' + (x+w/2) + ',' + (h-5) + ')' })
-						.attr("d", d3.svg.symbol()
-						.type(function(d) { return d3.svg.symbolTypes[4] })
-						.size(function(d) { return 40 }))
-						.attr('fill', function(d) { return "#A020F0" })
 				  y += h
 		    }
       }else{
@@ -419,6 +420,17 @@ function heatmapImpl() {
     }
   }
 
+function plotName(names){
+	var title = names.map(function(d) {
+	 return d.x.split('-')[0];
+	})
+	.filter((v,i,a)=>a.indexOf(v)==i)
+	.join(" vs. ")
+	var tt = d3.select("head").select('title')
+	tt.text(title + " - " + tt.text())
+	d3.select("#title").text(title)
+}
+	
 function tdfill(d, i) {
 	var colord = d3.scale.linear()
 	  .domain([settings.low, 0, settings.high])
@@ -529,7 +541,7 @@ function plotD(i, j){
 		.attr('y',10*k+y)
 		.attr('width',w*Math.abs(f))
 		.attr('height',10)
-		.attr('fill', f>0?'#f00':'#00f' )
+		.attr('fill', f>0?'#fc0':'#0cf' )
 		y += 5
 	}
 }
@@ -556,7 +568,7 @@ function showinfo(d, i){
 	legend2(col2, root.append("span")
 	  .style("height", "25px")
 	  .style("white-space", "nowrap")
-	  .attr("id", "info-legend"+i))
+	  .attr("id", "info-legend"+i), 5, 20)
 }
 
 function strokecolor(d) {
